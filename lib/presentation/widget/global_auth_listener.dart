@@ -27,9 +27,14 @@ class GlobalAuthListener extends StatelessWidget {
           final user = state.data as UserEntity;
 
           if (user.isOnboardingComplete != null && user.isOnboardingComplete!) {
-            // Only navigate if not already on home page
-            if (currentRoute != homePage) {
-              navigator.pushNamedAndRemoveUntil(homePage);
+            if (user.isAntropometriComplete != null &&
+                user.isAntropometriComplete!) {
+              // Only navigate if not already on home page
+              if (currentRoute != homePage) {
+                navigator.pushNamedAndRemoveUntil(homePage);
+              }
+            } else {
+              navigator.pushNamedAndRemoveUntil(antropometriPage);
             }
           } else {
             // Only navigate if not already on onboarding page

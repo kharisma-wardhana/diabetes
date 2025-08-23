@@ -19,6 +19,8 @@ class InfoRepoImpl extends InfoRepo {
       return Right(articles.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 
@@ -29,6 +31,8 @@ class InfoRepoImpl extends InfoRepo {
       return Right(article.toEntity());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 
@@ -39,6 +43,8 @@ class InfoRepoImpl extends InfoRepo {
       return Right(doctors.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 
@@ -49,6 +55,8 @@ class InfoRepoImpl extends InfoRepo {
       return Right(videos.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 }

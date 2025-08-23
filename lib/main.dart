@@ -10,6 +10,7 @@ import 'core/connectivity_manager.dart';
 import 'core/error_handler.dart';
 import 'core/injector/service_locator.dart';
 import 'gen/colors.gen.dart';
+import 'presentation/bloc/assesment/antropometri_cubit.dart';
 import 'presentation/bloc/auth/auth_bloc.dart';
 import 'presentation/bloc/auth/auth_event.dart';
 import 'presentation/page/splash_page.dart';
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider<AuthBloc>(
             create: (_) => sl<AuthBloc>()..add(AppStarted()),
+          ),
+          BlocProvider<AntropometriCubit>(
+            create: (_) => sl<AntropometriCubit>(),
           ),
         ],
         child: GlobalAuthListener(

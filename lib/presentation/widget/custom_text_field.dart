@@ -91,13 +91,12 @@ class CustomTextField extends StatelessWidget {
                 readOnly: isReadOnly,
               ),
             ),
-            if (satuanText != null && satuanText!.isNotEmpty)
-              SizedBox(width: 8.w),
+            if (satuanText != null && satuanText!.isNotEmpty) 8.horizontalSpace,
             if (satuanText != null && satuanText!.isNotEmpty) Text(satuanText!),
           ],
         ),
         infoText != null && infoText!.isNotEmpty
-            ? Text(infoText!)
+            ? Text(infoText!, style: TextStyle(color: infoTextColor))
             : const SizedBox.shrink(),
         10.verticalSpace,
       ],

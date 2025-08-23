@@ -1,16 +1,33 @@
 # diabetes
 
-A new Flutter project.
+### Instalasi
+- Pastikan sudah menginstal Flutter dan Dart.
+- Clone repository ini:
+```bash
+git clone <repo-url>
+cd elan_diabetes
+```
+- Install dependencies:
+```bash
+flutter pub get
+```
 
-## Getting Started
+### Build & Run
+- Untuk menjalankan aplikasi di emulator/device:
+```bash
+flutter run
+```
+- Untuk membangun kode generator:
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+- Untuk build release (Android):
+```bash
+flutter build apk --release
+```
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Struktur Folder
+- lib - Kode utama aplikasi (core, data, domain, presentation, dsb)
+- assets - Gambar, ikon, dan aset lainnya
+- android, ios, web, windows, linux, macos - Kode platform spesifik
+- test - Unit dan widget tests

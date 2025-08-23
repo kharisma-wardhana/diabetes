@@ -1,9 +1,12 @@
+import 'package:diabetes/presentation/bloc/auth/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/app_navigator.dart';
 import '../../../core/constant.dart';
 import '../../../core/injector/service_locator.dart';
 import '../../../gen/assets.gen.dart';
+import '../../bloc/auth/auth_bloc.dart';
 import 'onboarding_card.dart';
 import 'onboarding_diabetes_card.dart';
 
@@ -57,6 +60,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           );
         },
         onTapB: () {
+          context.read<AuthBloc>().add(CompleteOnboardingEvent());
           sl<AppNavigator>().pushReplacementNamed(antropometriPage);
         },
       ),
@@ -70,6 +74,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             'adalah keadaan dimana pankreas tidak mampu menghasilkan insulin dengan jumlah yang memadai atau tubuh tidak mampu menggunakan insulin yang tersedia dengan benar sehingga mengakibatkan kadar gula dalam darah terlalu tinggi .',
         image: Assets.images.logoElan.path,
         onTapA: () {
+          context.read<AuthBloc>().add(CompleteOnboardingEvent());
           sl<AppNavigator>().pushReplacementNamed(antropometriPage);
         },
       ),

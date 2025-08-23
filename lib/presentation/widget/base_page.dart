@@ -42,7 +42,6 @@ class _BasePageState extends State<BasePage> {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: widget.bgColor,
-          resizeToAvoidBottomInset: false,
           appBar: widget.appBar,
           drawer: widget.drawable,
           body: Stack(
