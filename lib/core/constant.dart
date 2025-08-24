@@ -35,6 +35,7 @@ const String videoPage = '/video';
 
 // Assesment Page
 const String antropometriPage = '/antropometri';
+const String assesmentPage = '/assesment';
 const String waterPage = '/water';
 const String addWaterPage = '/water/add';
 const String gulaPage = '/blood-sugar';

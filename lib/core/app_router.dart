@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../presentation/page/assesment/antropometri_page.dart';
+import '../presentation/page/assesment/asam_urat/add_asam_urat_page.dart';
+import '../presentation/page/assesment/asam_urat/asam_urat_page.dart';
+import '../presentation/page/assesment/assesment_page.dart';
+import '../presentation/page/assesment/ginjal/add_ginjal_page.dart';
+import '../presentation/page/assesment/ginjal/ginjal_page.dart';
+import '../presentation/page/assesment/hb/add_hb_page.dart';
+import '../presentation/page/assesment/hb/hb_page.dart';
+import '../presentation/page/assesment/kolesterol/add_kolesterol_page.dart';
+import '../presentation/page/assesment/kolesterol/kolesterol_page.dart';
+import '../presentation/page/assesment/konsumsi_air/add_konsumsi_air_page.dart';
+import '../presentation/page/assesment/konsumsi_air/konsumsi_air_page.dart';
+import '../presentation/page/assesment/tekanan_darah/add_tensi_page.dart';
+import '../presentation/page/assesment/tekanan_darah/tensi_page.dart';
 import '../presentation/page/auth/login_page.dart';
 import '../presentation/page/auth/register_page.dart';
 import '../presentation/page/home/activitas/activity_page.dart';
@@ -91,34 +104,36 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const DoctorPage());
       //============================================================
       // Assesment Pages
-      // case waterPage:
-      //   return MaterialPageRoute(builder: (_) => const KonsumsiAirPage());
-      // case addWaterPage:
-      //   return MaterialPageRoute(builder: (_) => const AddKonsumsiAirPage());
-      // case ginjalPage:
-      //   return MaterialPageRoute(builder: (_) => const GinjalPage());
-      // case addGinjalPage:
-      //   return MaterialPageRoute(builder: (_) => const AddGinjalPage());
+      case assesmentPage:
+        return MaterialPageRoute(builder: (_) => const AssesmentPage());
+      case waterPage:
+        return MaterialPageRoute(builder: (_) => const KonsumsiAirPage());
+      case addWaterPage:
+        return MaterialPageRoute(builder: (_) => const AddKonsumsiAirPage());
+      case ginjalPage:
+        return MaterialPageRoute(builder: (_) => const GinjalPage());
+      case addGinjalPage:
+        return MaterialPageRoute(builder: (_) => const AddGinjalPage());
       // case gulaPage:
       //   return MaterialPageRoute(builder: (_) => const GulaPage());
       // case addGulaPage:
       //   return MaterialPageRoute(builder: (_) => const AddGulaPage());
-      // case kolesterolPage:
-      //   return MaterialPageRoute(builder: (_) => const KolesterolPage());
-      // case addKolesterolPage:
-      //   return MaterialPageRoute(builder: (_) => const AddKolesterolPage());
-      // case tensiPage:
-      //   return MaterialPageRoute(builder: (_) => const TensiPage());
-      // case addTensiPage:
-      //   return MaterialPageRoute(builder: (_) => const AddTensiPage());
-      // case asamUratPage:
-      //   return MaterialPageRoute(builder: (_) => const AsamUratPage());
-      // case addAsamUratPage:
-      //   return MaterialPageRoute(builder: (_) => const AddAsamUratPage());
-      // case hbPage:
-      //   return MaterialPageRoute(builder: (_) => const HbPage());
-      // case addHbPage:
-      //   return MaterialPageRoute(builder: (_) => const AddHbPage());
+      case kolesterolPage:
+        return MaterialPageRoute(builder: (_) => const KolesterolPage());
+      case addKolesterolPage:
+        return MaterialPageRoute(builder: (_) => const AddKolesterolPage());
+      case tensiPage:
+        return MaterialPageRoute(builder: (_) => const TensiPage());
+      case addTensiPage:
+        return MaterialPageRoute(builder: (_) => const AddTensiPage());
+      case asamUratPage:
+        return MaterialPageRoute(builder: (_) => const AsamUratPage());
+      case addAsamUratPage:
+        return MaterialPageRoute(builder: (_) => const AddAsamUratPage());
+      case hbPage:
+        return MaterialPageRoute(builder: (_) => const HbPage());
+      case addHbPage:
+        return MaterialPageRoute(builder: (_) => const AddHbPage());
       //============================================================
       default:
         return MaterialPageRoute(

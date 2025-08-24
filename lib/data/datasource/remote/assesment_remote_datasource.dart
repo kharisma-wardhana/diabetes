@@ -1,7 +1,24 @@
 import '../../../core/api_service.dart';
 import '../../../core/error.dart';
+import '../../../domain/entity/assesment/activity/activity_entity.dart';
 import '../../../domain/entity/assesment/antropometri/antropometri_entity.dart';
+import '../../../domain/entity/assesment/asam_urat_entity.dart';
+import '../../../domain/entity/assesment/ginjal_entity.dart';
+import '../../../domain/entity/assesment/gula_darah/gula_darah_entity.dart';
+import '../../../domain/entity/assesment/hb1ac_entity.dart';
+import '../../../domain/entity/assesment/kolesterol_entity.dart';
+import '../../../domain/entity/assesment/tensi_entity.dart';
+import '../../../domain/entity/assesment/water_entity.dart';
+import '../../model/assesment/activity/activity.dart';
 import '../../model/assesment/antropometri/antropometri.dart';
+import '../../model/assesment/asam_urat/asam_urat.dart';
+import '../../model/assesment/assesment/assesment.dart';
+import '../../model/assesment/ginjal/ginjal.dart';
+import '../../model/assesment/gula_darah/gula_darah.dart';
+import '../../model/assesment/hb1ac/hb1ac.dart';
+import '../../model/assesment/kolesterol/kolesterol.dart';
+import '../../model/assesment/tekanan_darah/tekanan_darah.dart';
+import '../../model/assesment/water/water.dart';
 
 abstract class AssesmentRemoteDatasource {
   Future<Antropometri> addAntropometri(
@@ -9,6 +26,49 @@ abstract class AssesmentRemoteDatasource {
     AntropometriEntity antropometri,
   );
   Future<Antropometri?> getDetailAntropometri(int userId);
+  Future<Assesment> getAssesment(int userId);
+  Future<List<Water>> getListWater(int userId, String date);
+  Future<List<Water>> addWater(int userId, WaterEntity water);
+  Future<List<Water>> getGraphicWater(int userId, String month, String year);
+  Future<List<Activity>> addActivity(int userId, ActivityEntity activity);
+  Future<List<Activity>> getListActivity(int userId, String date);
+  Future<List<TekananDarah>> getListTekananDarah(int userId, String date);
+  Future<List<TekananDarah>> getGraphicTekananDarah(
+    int userId,
+    String month,
+    String year,
+  );
+  Future<List<TekananDarah>> addTekananDarah(int userId, TensiEntity tensi);
+  Future<List<Kolesterol>> getListKolesterol(int userId, String date);
+  Future<List<Kolesterol>> getGraphicKolesterol(
+    int userId,
+    String month,
+    String year,
+  );
+  Future<List<Kolesterol>> addKolesterol(
+    int userId,
+    KolesterolEntity kolesterol,
+  );
+  Future<List<AsamUrat>> getListAsamUrat(int userId, String date);
+  Future<List<AsamUrat>> getGraphicAsamUrat(
+    int userId,
+    String month,
+    String year,
+  );
+  Future<List<AsamUrat>> addAsamUrat(int userId, AsamUratEntity asamUrat);
+  Future<List<Hb1ac>> getListHb1ac(int userId, String date);
+  Future<List<Hb1ac>> getGraphicHb1ac(int userId, String month, String year);
+  Future<List<Hb1ac>> addHb1ac(int userId, Hb1acEntity hb1ac);
+  Future<List<Ginjal>> getListGinjal(int userId, String date);
+  Future<List<Ginjal>> getGraphicGinjal(int userId, String month, String year);
+  Future<List<Ginjal>> addGinjal(int userId, GinjalEntity ginjal);
+  Future<List<GulaDarah>> addGulaDarah(int userId, GulaDarahEntity gula);
+  Future<List<GulaDarah>> getListGulaDarah(int userId, String date);
+  Future<List<GulaDarah>> getGraphicGulaDarah(
+    int userId,
+    String month,
+    String year,
+  );
 }
 
 class AssesmentRemoteDatasourceImpl implements AssesmentRemoteDatasource {
@@ -58,6 +118,433 @@ class AssesmentRemoteDatasourceImpl implements AssesmentRemoteDatasource {
       }
       final responseData = response.data as Map<String, dynamic>;
       return Antropometri.fromJson(responseData);
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Assesment> getAssesment(int userId) async {
+    try {
+      final response = await apiService.fetchData('/users/$userId/assesments');
+      final responseData = response.data as Map<String, dynamic>;
+      return Assesment.fromJson(responseData);
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Water>> getListWater(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/waters?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Water.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Water>> addWater(int userId, WaterEntity water) async {
+    try {
+      final response = await apiService.postData('/users/$userId/waters', {
+        'users_id': userId,
+        'tanggal': water.date,
+        'target': water.target,
+        'jumlah': water.total,
+      });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Water.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Activity>> addActivity(
+    int userId,
+    ActivityEntity activity,
+  ) async {
+    try {
+      final response = await apiService.postData('/users/$userId/activities', {
+        'users_id': userId,
+        'tanggal': activity.date,
+        'jenis': activity.name,
+        'jam': activity.hour,
+        'menit': activity.minute,
+      });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Activity.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Activity>> getListActivity(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/activities?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Activity.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<AsamUrat>> getListAsamUrat(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/gouts?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => AsamUrat.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<GulaDarah>> getListGulaDarah(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/blood-sugars?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => GulaDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Hb1ac>> getListHb1ac(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/hbs?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Hb1ac.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Kolesterol>> getListKolesterol(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/cholesterols?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Kolesterol.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<TekananDarah>> getListTekananDarah(
+    int userId,
+    String date,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/blood-pressures?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => TekananDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Ginjal>> getListGinjal(int userId, String date) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/kidneys?date=$date',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Ginjal.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<AsamUrat>> addAsamUrat(
+    int userId,
+    AsamUratEntity asamUrat,
+  ) async {
+    try {
+      final response = await apiService.postData('/users/$userId/gouts', {
+        'users_id': userId,
+        'tanggal': asamUrat.date,
+        'jumlah': asamUrat.total,
+      });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => AsamUrat.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Ginjal>> addGinjal(int userId, GinjalEntity ginjal) async {
+    try {
+      final response = await apiService.postData('/users/$userId/kidneys', {
+        'users_id': userId,
+        'tanggal': ginjal.date,
+        'type': ginjal.type,
+        'jumlah': ginjal.total,
+      });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Ginjal.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<GulaDarah>> addGulaDarah(int userId, GulaDarahEntity gula) async {
+    try {
+      final response = await apiService
+          .postData('/users/$userId/blood-sugars', {
+            'users_id': userId,
+            'tanggal': gula.date,
+            'jam': gula.time,
+            'type': gula.type,
+            'kadar': gula.total,
+          });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => GulaDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Hb1ac>> addHb1ac(int userId, Hb1acEntity hb1ac) async {
+    try {
+      final response = await apiService.postData('/users/$userId/hbs', {
+        'users_id': userId,
+        'tanggal': hb1ac.date,
+        'jumlah': hb1ac.total,
+      });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Hb1ac.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Kolesterol>> addKolesterol(
+    int userId,
+    KolesterolEntity kolesterol,
+  ) async {
+    try {
+      final response = await apiService
+          .postData('/users/$userId/cholesterols', {
+            'users_id': userId,
+            'tanggal': kolesterol.date,
+            'type': kolesterol.type,
+            'kadar_kolesterol': kolesterol.total,
+          });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Kolesterol.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<TekananDarah>> addTekananDarah(
+    int userId,
+    TensiEntity tensi,
+  ) async {
+    try {
+      final response = await apiService
+          .postData('/users/$userId/blood-pressures', {
+            'users_id': userId,
+            'tanggal': tensi.date,
+            'jam': tensi.time,
+            'sistole': tensi.sistole,
+            'diastole': tensi.diastole,
+          });
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => TekananDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<AsamUrat>> getGraphicAsamUrat(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/gouts?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => AsamUrat.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Ginjal>> getGraphicGinjal(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/kidneys?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Ginjal.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<GulaDarah>> getGraphicGulaDarah(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/blood-sugars?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => GulaDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Hb1ac>> getGraphicHb1ac(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/hbs?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Hb1ac.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Kolesterol>> getGraphicKolesterol(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/cholesterols?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Kolesterol.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<TekananDarah>> getGraphicTekananDarah(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/blood-pressures?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => TekananDarah.fromJson(e))
+          .toList();
+    } on ServerException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Water>> getGraphicWater(
+    int userId,
+    String month,
+    String year,
+  ) async {
+    try {
+      final response = await apiService.fetchData(
+        '/users/$userId/waters?month=$month&year=$year',
+      );
+      final responseData = response.data as Map<String, dynamic>;
+      return (responseData['list'] as List)
+          .map((e) => Water.fromJson(e))
+          .toList();
     } on ServerException {
       rethrow;
     }
