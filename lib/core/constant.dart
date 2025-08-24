@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../gen/assets.gen.dart';
+
 const String baseURL = 'https://elan.cmutiah.com/api';
 const String tokenKey = 'auth_token';
 const String antropometriKey = 'antropometri_data';
@@ -50,6 +52,34 @@ const String addKolesterolPage = '/kolesterol/add';
 const String asamUratPage = '/gout';
 const String addAsamUratPage = '/gout/add';
 // =====================================
+
+final List<Map<String, dynamic>> edukasi = [
+  {
+    'title': 'Apa yang Dilakukan Agar Selamat dan Aman Saat Banjir',
+    'image': [Assets.images.apaYangDilakukanAgarSelamatDanAmanSaatBanjir.path],
+  },
+  {
+    'title': 'Apa yang Dilakukan Agar Selamat dan Aman Saat Kebakaran',
+    'image': [
+      Assets.images.apaYangDilakukanAgarSelamatDanAmanSaatKebakaran.path,
+    ],
+  },
+  {
+    'title': 'Apa Saja yang Harus Dibawa Dalam Tas Siaga Bencana',
+    'image': [Assets.images.apaSajaYangHarusDibawaDalamTasSiagaBencana.path],
+  },
+  {
+    'title': 'Edukasi Bencana Untuk Lansia',
+    'image': [
+      Assets.images.edukasiBencanaUntukLansia1.path,
+      Assets.images.edukasiBencanaUntukLansia2.path,
+      Assets.images.edukasiBencanaUntukLansia3.path,
+      Assets.images.edukasiBencanaUntukLansia4.path,
+      Assets.images.edukasiBencanaUntukLansia5.path,
+      Assets.images.edukasiBencanaUntukLansia6.path,
+    ],
+  },
+];
 
 List<String> questions = [
   'Apakah Anda mengalami gejala seperti sering haus, sering buang air kecil?',

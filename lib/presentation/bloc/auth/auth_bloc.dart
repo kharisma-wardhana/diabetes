@@ -57,6 +57,7 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<UserEntity>>
     });
 
     on<LogoutEvent>((event, emit) {
+      emit(const BaseState.loading());
       secureStorage.delete(key: tokenKey);
       secureStorage.delete(key: userIDKey);
       emit(const BaseState.initial());

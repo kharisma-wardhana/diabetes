@@ -13,6 +13,9 @@ import 'gen/colors.gen.dart';
 import 'presentation/bloc/assesment/antropometri_cubit.dart';
 import 'presentation/bloc/auth/auth_bloc.dart';
 import 'presentation/bloc/auth/auth_event.dart';
+import 'presentation/bloc/info/article_cubit.dart';
+import 'presentation/bloc/info/doctor_cubit.dart';
+import 'presentation/bloc/info/video_cubit.dart';
 import 'presentation/page/splash_page.dart';
 import 'presentation/widget/global_auth_listener.dart';
 
@@ -47,6 +50,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<AntropometriCubit>(
             create: (_) => sl<AntropometriCubit>(),
           ),
+          BlocProvider<ArticleCubit>(create: (_) => sl<ArticleCubit>()),
+          BlocProvider<DoctorCubit>(create: (_) => sl<DoctorCubit>()),
+          BlocProvider<VideoCubit>(create: (_) => sl<VideoCubit>()),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(

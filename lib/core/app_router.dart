@@ -10,12 +10,12 @@ import '../presentation/page/home/home_page.dart';
 import '../presentation/page/home/kalori/diet_page.dart';
 import '../presentation/page/home/kalori/kalori_intake_page.dart';
 import '../presentation/page/home/kalori/tujuan_diet_page.dart';
-import '../presentation/page/info/artikel/artikel_page.dart';
-import '../presentation/page/info/artikel/detail_artikel_page.dart';
-import '../presentation/page/info/doctor/doctor_page.dart';
-import '../presentation/page/info/edukasi/detail_edukasi_page.dart';
-import '../presentation/page/info/edukasi/edukasi_page.dart';
-import '../presentation/page/info/video/video_page.dart';
+import '../presentation/page/home/info/artikel/artikel_page.dart';
+import '../presentation/page/home/info/artikel/detail_artikel_page.dart';
+import '../presentation/page/home/info/doctor/doctor_page.dart';
+import '../presentation/page/home/info/edukasi/detail_edukasi_page.dart';
+import '../presentation/page/home/info/edukasi/edukasi_page.dart';
+import '../presentation/page/home/info/video/video_page.dart';
 import '../presentation/page/onboarding/onboarding_page.dart';
 import '../presentation/page/profile/about_page.dart';
 import '../presentation/page/profile/profile_page.dart';
@@ -75,18 +75,18 @@ class AppRoutes {
       // Info Pages
       case articlePage:
         return MaterialPageRoute(builder: (_) => const ArtikelPage());
-      // case detailArticlePage:
-      //   return MaterialPageRoute(
-      //     builder: (_) => DetailArtikelPage(articleEntity: argument),
-      //   );
+      case detailArticlePage:
+        return MaterialPageRoute(
+          builder: (_) => DetailArtikelPage(article: argument),
+        );
       case videoPage:
         return MaterialPageRoute(builder: (_) => const VideoPage());
       case edukasiPage:
         return MaterialPageRoute(builder: (_) => const EdukasiPage());
-      // case edukasiDetailPage:
-      //   return MaterialPageRoute(
-      //     builder: (_) => DetailEdukasiPage(edukasiEntity: argument),
-      //   );
+      case edukasiDetailPage:
+        return MaterialPageRoute(
+          builder: (_) => DetailEdukasiPage(edukasi: argument),
+        );
       case doctorPage:
         return MaterialPageRoute(builder: (_) => const DoctorPage());
       //============================================================
