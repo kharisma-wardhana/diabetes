@@ -41,9 +41,8 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
   final TextEditingController totalController = TextEditingController(text: '');
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    currentTarget = await getRecommend();
   }
 
   Future<int> getRecommend() async {

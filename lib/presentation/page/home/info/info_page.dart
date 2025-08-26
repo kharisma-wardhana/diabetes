@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../core/app_navigator.dart';
+import '../../../../core/base_state.dart';
 import '../../../../core/constant.dart';
 import '../../../../core/injector/service_locator.dart';
+import '../../../../domain/entity/assesment/assesment_entity.dart';
 import '../../../../gen/assets.gen.dart';
+import '../../../../gen/colors.gen.dart';
+import '../../../bloc/assesment/assesment_cubit.dart';
 import '../../../bloc/info/article_cubit.dart';
 import '../../../bloc/info/doctor_cubit.dart';
 import '../../../bloc/info/video_cubit.dart';
+import '../../../widget/custom_loading.dart';
 import 'widget/custom_button_info.dart';
 
 class InfoPage extends StatefulWidget {
@@ -43,114 +50,167 @@ class _InfoPageState extends State<InfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(8.r),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(8.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: CustomButtonInfo(
-                    icon: Assets.images.a13840231.path,
-                    label: 'Ruang\nKonsultasi',
-                    onTap: () async {
-                      if (!mounted) return;
-                      setState(() {
-                        isLoading = true;
-                        errorMessage = null;
-                      });
-                      try {
-                        await doctorCubit.getAllDoctor();
-                        if (!mounted) return;
-                        setState(() => isLoading = false);
-                        navigatorHelper.pushNamed(doctorPage);
-                      } catch (e) {
-                        if (!mounted) return;
-                        setState(() {
-                          isLoading = false;
-                          errorMessage = 'Gagal memuat data dokter';
-                        });
-                        _showErrorDialog('Gagal memuat data dokter');
-                      }
-                    },
-                  ),
+                InkWell(
+                  onTap: () async {
+                    await context.read<AssesmentCubit>().getAssesment();
+                  },
+                  child:
+                      BlocConsumer<AssesmentCubit, BaseState<AssesmentEntity>>(
+                        builder: (context, state) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: double.infinity,
+                              height: 80.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(color: ColorName.primary),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "CHECK KESEHATAN",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorName.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        listener: (context, state) {
+                          if (mounted) {
+                            setState(() => isLoading = state.isLoading);
+                          }
+                          if (state.isError) {
+                            Fluttertoast.showToast(
+                              msg: state.errorMessage ?? "Unknown Error",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              textColor: Colors.white,
+                              backgroundColor: Colors.red,
+                            );
+                          }
+                          if (state.isSuccess && state.data != null) {
+                            navigatorHelper.pushNamed(assesmentPage);
+                          }
+                        },
+                      ),
                 ),
-                8.horizontalSpace,
-                Expanded(
-                  child: CustomButtonInfo(
-                    icon: Assets.images.informasiDiabetes.path,
-                    label: 'Informasi\nDiabetes',
-                    onTap: () async {
-                      if (!mounted) return;
-                      setState(() {
-                        isLoading = true;
-                        errorMessage = null;
-                      });
-                      try {
-                        await articleCubit.getAllArticle();
-                        if (!mounted) return;
-                        setState(() => isLoading = false);
-                        navigatorHelper.pushNamed(articlePage);
-                      } catch (e) {
-                        if (!mounted) return;
-                        setState(() {
-                          isLoading = false;
-                          errorMessage = 'Gagal memuat artikel';
-                        });
-                        _showErrorDialog('Gagal memuat artikel');
-                      }
-                    },
-                  ),
+                8.verticalSpace,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonInfo(
+                        icon: Assets.images.a13840231.path,
+                        label: 'Ruang\nKonsultasi',
+                        onTap: () async {
+                          if (!mounted) return;
+                          setState(() {
+                            isLoading = true;
+                            errorMessage = null;
+                          });
+                          try {
+                            await doctorCubit.getAllDoctor();
+                            if (!mounted) return;
+                            setState(() => isLoading = false);
+                            navigatorHelper.pushNamed(doctorPage);
+                          } catch (e) {
+                            if (!mounted) return;
+                            setState(() {
+                              isLoading = false;
+                              errorMessage = 'Gagal memuat data dokter';
+                            });
+                            _showErrorDialog('Gagal memuat data dokter');
+                          }
+                        },
+                      ),
+                    ),
+                    8.horizontalSpace,
+                    Expanded(
+                      child: CustomButtonInfo(
+                        icon: Assets.images.informasiDiabetes.path,
+                        label: 'Informasi\nDiabetes',
+                        onTap: () async {
+                          if (!mounted) return;
+                          setState(() {
+                            isLoading = true;
+                            errorMessage = null;
+                          });
+                          try {
+                            await articleCubit.getAllArticle();
+                            if (!mounted) return;
+                            setState(() => isLoading = false);
+                            navigatorHelper.pushNamed(articlePage);
+                          } catch (e) {
+                            if (!mounted) return;
+                            setState(() {
+                              isLoading = false;
+                              errorMessage = 'Gagal memuat artikel';
+                            });
+                            _showErrorDialog('Gagal memuat artikel');
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+                8.verticalSpace,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonInfo(
+                        icon: Assets.images.icon.path,
+                        label: 'Video\nEdukasi',
+                        onTap: () async {
+                          if (!mounted) return;
+                          setState(() {
+                            isLoading = true;
+                            errorMessage = null;
+                          });
+                          try {
+                            await videoCubit.getAllVideo();
+                            if (!mounted) return;
+                            setState(() => isLoading = false);
+                            navigatorHelper.pushNamed(videoPage);
+                          } catch (e) {
+                            if (!mounted) return;
+                            setState(() {
+                              isLoading = false;
+                              errorMessage = 'Gagal memuat video';
+                            });
+                            _showErrorDialog('Gagal memuat video');
+                          }
+                        },
+                      ),
+                    ),
+                    8.horizontalSpace,
+                    Expanded(
+                      child: CustomButtonInfo(
+                        icon: Assets.images.edukasiBencana.path,
+                        label: 'Edukasi\nBencana',
+                        onTap: () {
+                          navigatorHelper.pushNamed(edukasiPage);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                8.verticalSpace,
               ],
             ),
-            8.verticalSpace,
-            Row(
-              children: [
-                Expanded(
-                  child: CustomButtonInfo(
-                    icon: Assets.images.icon.path,
-                    label: 'Video\nEdukasi',
-                    onTap: () async {
-                      if (!mounted) return;
-                      setState(() {
-                        isLoading = true;
-                        errorMessage = null;
-                      });
-                      try {
-                        await videoCubit.getAllVideo();
-                        if (!mounted) return;
-                        setState(() => isLoading = false);
-                        navigatorHelper.pushNamed(videoPage);
-                      } catch (e) {
-                        if (!mounted) return;
-                        setState(() {
-                          isLoading = false;
-                          errorMessage = 'Gagal memuat video';
-                        });
-                        _showErrorDialog('Gagal memuat video');
-                      }
-                    },
-                  ),
-                ),
-                8.horizontalSpace,
-                Expanded(
-                  child: CustomButtonInfo(
-                    icon: Assets.images.edukasiBencana.path,
-                    label: 'Edukasi\nBencana',
-                    onTap: () {
-                      navigatorHelper.pushNamed(edukasiPage);
-                    },
-                  ),
-                ),
-              ],
-            ),
-            8.verticalSpace,
-          ],
+          ),
         ),
-      ),
+        if (isLoading) CustomLoading(),
+      ],
     );
   }
 }

@@ -5,10 +5,10 @@ import '../../../core/usecase.dart';
 import '../../entity/assesment/ginjal_entity.dart';
 import '../../repository/assesment_repo.dart';
 
-class AddGinjalUsecase
+class AddGinjalUseCase
     extends UseCase<List<GinjalEntity>, AddParams<GinjalEntity>> {
   final AssesmentRepository assesmentRepo;
-  const AddGinjalUsecase({required this.assesmentRepo});
+  const AddGinjalUseCase({required this.assesmentRepo});
 
   @override
   Future<Either<Failure, List<GinjalEntity>>> call(

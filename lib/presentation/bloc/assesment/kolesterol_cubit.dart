@@ -7,8 +7,8 @@ import '../../../domain/usecase/assesment/add_kolesterol_usecase.dart';
 import '../../../domain/usecase/assesment/get_list_kolesterol_usecase.dart';
 
 class KolesterolCubit extends Cubit<BaseState<List<KolesterolEntity>>> {
-  final GetListKolesterolUsecase getListKolesterolUsecase;
-  final AddKolesterolUsecase addKolesterolUsecase;
+  final GetListKolesterolUseCase getListKolesterolUsecase;
+  final AddKolesterolUseCase addKolesterolUsecase;
 
   KolesterolCubit({
     required this.getListKolesterolUsecase,

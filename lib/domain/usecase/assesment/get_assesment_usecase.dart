@@ -5,10 +5,10 @@ import '../../../core/usecase.dart';
 import '../../entity/assesment/assesment_entity.dart';
 import '../../repository/assesment_repo.dart';
 
-class GetAssesmentUsecase extends UseCase<AssesmentEntity, NoParams> {
+class GetAssesmentUseCase extends UseCase<AssesmentEntity, NoParams> {
   final AssesmentRepository assesmentRepository;
 
-  GetAssesmentUsecase({required this.assesmentRepository});
+  GetAssesmentUseCase({required this.assesmentRepository});
 
   @override
   Future<Either<Failure, AssesmentEntity>> call(NoParams params) async {

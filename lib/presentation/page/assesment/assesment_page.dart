@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/app_navigator.dart';
@@ -17,6 +16,7 @@ import '../../bloc/assesment/hb1ac_cubit.dart';
 import '../../bloc/assesment/kolesterol_cubit.dart';
 import '../../bloc/assesment/tensi_cubit.dart';
 import '../../bloc/assesment/water_cubit.dart';
+import '../../widget/base_page.dart';
 import '../../widget/custom_loading.dart';
 import 'widget/custom_assesment_button.dart';
 
@@ -34,8 +34,9 @@ class _AssesmentPageState extends State<AssesmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
+    return BasePage(
+      appBar: AppBar(title: Text('CHECK KESEHATAN')),
+      body: SingleChildScrollView(
         child: Stack(
           children: [
             Padding(
@@ -50,15 +51,6 @@ class _AssesmentPageState extends State<AssesmentPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'CHECK KESEHATAN',
-                          style: GoogleFonts.poppins(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Divider(),
-                        16.verticalSpace,
                         CustomAssesmentButton(
                           title: 'Kadar Gula Darah',
                           data: [

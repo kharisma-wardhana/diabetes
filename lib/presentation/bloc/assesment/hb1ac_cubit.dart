@@ -7,8 +7,8 @@ import '../../../domain/usecase/assesment/add_hb_usecase.dart';
 import '../../../domain/usecase/assesment/get_list_hb_usecase.dart';
 
 class Hb1acCubit extends Cubit<BaseState<List<Hb1acEntity>>> {
-  final GetListHbUsecase getListHbUsecase;
-  final AddHbUsecase addHbUsecase;
+  final GetListHbUseCase getListHbUsecase;
+  final AddHbUseCase addHbUsecase;
 
   Hb1acCubit({required this.getListHbUsecase, required this.addHbUsecase})
     : super(BaseState.initial());

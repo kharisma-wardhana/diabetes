@@ -7,8 +7,8 @@ import '../../../domain/usecase/assesment/add_asam_urat_usecase.dart';
 import '../../../domain/usecase/assesment/get_list_asam_urat_usecase.dart';
 
 class AsamUratCubit extends Cubit<BaseState<List<AsamUratEntity>>> {
-  final GetListAsamUratUsecase getListAsamUratUsecase;
-  final AddAsamUratUsecase addAsamUratUsecase;
+  final GetListAsamUratUseCase getListAsamUratUsecase;
+  final AddAsamUratUseCase addAsamUratUsecase;
 
   AsamUratCubit({
     required this.getListAsamUratUsecase,

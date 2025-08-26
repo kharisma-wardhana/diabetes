@@ -11,6 +11,13 @@ import 'core/error_handler.dart';
 import 'core/injector/service_locator.dart';
 import 'gen/colors.gen.dart';
 import 'presentation/bloc/assesment/antropometri_cubit.dart';
+import 'presentation/bloc/assesment/asam_urat_cubit.dart';
+import 'presentation/bloc/assesment/assesment_cubit.dart';
+import 'presentation/bloc/assesment/ginjal_cubit.dart';
+import 'presentation/bloc/assesment/gula_cubit.dart';
+import 'presentation/bloc/assesment/hb1ac_cubit.dart';
+import 'presentation/bloc/assesment/kolesterol_cubit.dart';
+import 'presentation/bloc/assesment/water_cubit.dart';
 import 'presentation/bloc/auth/auth_bloc.dart';
 import 'presentation/bloc/auth/auth_event.dart';
 import 'presentation/bloc/info/article_cubit.dart';
@@ -53,6 +60,13 @@ class MyApp extends StatelessWidget {
           BlocProvider<ArticleCubit>(create: (_) => sl<ArticleCubit>()),
           BlocProvider<DoctorCubit>(create: (_) => sl<DoctorCubit>()),
           BlocProvider<VideoCubit>(create: (_) => sl<VideoCubit>()),
+          BlocProvider<AssesmentCubit>(create: (_) => sl<AssesmentCubit>()),
+          BlocProvider<GulaCubit>(create: (_) => sl<GulaCubit>()),
+          BlocProvider<Hb1acCubit>(create: (_) => sl<Hb1acCubit>()),
+          BlocProvider<KolesterolCubit>(create: (_) => sl<KolesterolCubit>()),
+          BlocProvider<WaterCubit>(create: (_) => sl<WaterCubit>()),
+          BlocProvider<GinjalCubit>(create: (_) => sl<GinjalCubit>()),
+          BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(

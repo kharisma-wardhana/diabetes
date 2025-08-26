@@ -7,8 +7,8 @@ import '../../../domain/usecase/assesment/add_ginjal_usecase.dart';
 import '../../../domain/usecase/assesment/get_list_ginjal_usecase.dart';
 
 class GinjalCubit extends Cubit<BaseState<List<GinjalEntity>>> {
-  final GetListGinjalUsecase getListGinjalUsecase;
-  final AddGinjalUsecase addGinjalUsecase;
+  final GetListGinjalUseCase getListGinjalUsecase;
+  final AddGinjalUseCase addGinjalUsecase;
 
   GinjalCubit({
     required this.getListGinjalUsecase,

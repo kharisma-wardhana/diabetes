@@ -6,7 +6,7 @@ import '../../../domain/entity/assesment/assesment_entity.dart';
 import '../../../domain/usecase/assesment/get_assesment_usecase.dart';
 
 class AssesmentCubit extends Cubit<BaseState<AssesmentEntity>> {
-  final GetAssesmentUsecase getAssesmentUsecase;
+  final GetAssesmentUseCase getAssesmentUsecase;
 
   AssesmentCubit({required this.getAssesmentUsecase})
     : super(BaseState.initial());

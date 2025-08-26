@@ -5,10 +5,10 @@ import '../../../core/usecase.dart';
 import '../../entity/assesment/asam_urat_entity.dart';
 import '../../repository/assesment_repo.dart';
 
-class GetListAsamUratUsecase
+class GetListAsamUratUseCase
     extends UseCase<List<AsamUratEntity>, SearchParams> {
   final AssesmentRepository assesmentRepo;
-  const GetListAsamUratUsecase({required this.assesmentRepo});
+  const GetListAsamUratUseCase({required this.assesmentRepo});
 
   @override
   Future<Either<Failure, List<AsamUratEntity>>> call(
