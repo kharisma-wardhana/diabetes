@@ -17,6 +17,7 @@ import 'presentation/bloc/assesment/ginjal_cubit.dart';
 import 'presentation/bloc/assesment/gula_cubit.dart';
 import 'presentation/bloc/assesment/hb1ac_cubit.dart';
 import 'presentation/bloc/assesment/kolesterol_cubit.dart';
+import 'presentation/bloc/assesment/tensi_cubit.dart';
 import 'presentation/bloc/assesment/water_cubit.dart';
 import 'presentation/bloc/auth/auth_bloc.dart';
 import 'presentation/bloc/auth/auth_event.dart';
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<WaterCubit>(create: (_) => sl<WaterCubit>()),
           BlocProvider<GinjalCubit>(create: (_) => sl<GinjalCubit>()),
           BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
+          BlocProvider<TensiCubit>(create: (_) => sl<TensiCubit>()),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(

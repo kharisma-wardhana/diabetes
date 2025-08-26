@@ -5,6 +5,7 @@ import '../../data/datasource/remote/assesment_remote_datasource.dart';
 import '../../data/repository/assesment_repo_impl.dart';
 import '../../domain/repository/assesment_repo.dart';
 import '../../domain/usecase/assesment/add_asam_urat_usecase.dart';
+import '../../domain/usecase/assesment/add_blood_pressure_usecase.dart';
 import '../../domain/usecase/assesment/add_blood_sugar_usecase.dart';
 import '../../domain/usecase/assesment/add_ginjal_usecase.dart';
 import '../../domain/usecase/assesment/add_hb_usecase.dart';
@@ -14,6 +15,7 @@ import '../../domain/usecase/assesment/antropometri/add_antropometri_usecase.dar
 import '../../domain/usecase/assesment/antropometri/get_antropometri_usecase.dart';
 import '../../domain/usecase/assesment/get_assesment_usecase.dart';
 import '../../domain/usecase/assesment/get_list_asam_urat_usecase.dart';
+import '../../domain/usecase/assesment/get_list_blood_pressure_usecase.dart';
 import '../../domain/usecase/assesment/get_list_blood_sugar_usecase.dart';
 import '../../domain/usecase/assesment/get_list_ginjal_usecase.dart';
 import '../../domain/usecase/assesment/get_list_hb_usecase.dart';
@@ -25,6 +27,7 @@ import '../../presentation/bloc/assesment/ginjal_cubit.dart';
 import '../../presentation/bloc/assesment/gula_cubit.dart';
 import '../../presentation/bloc/assesment/hb1ac_cubit.dart';
 import '../../presentation/bloc/assesment/kolesterol_cubit.dart';
+import '../../presentation/bloc/assesment/tensi_cubit.dart';
 import '../../presentation/bloc/assesment/water_cubit.dart';
 import '../api_service.dart';
 import 'service_locator.dart';
@@ -98,6 +101,13 @@ class AssesmentDependency {
     sl.registerLazySingleton(
       () => AddAsamUratUseCase(assesmentRepo: sl<AssesmentRepository>()),
     );
+    sl.registerLazySingleton(
+      () =>
+          GetListBloodPressureUseCase(assesmentRepo: sl<AssesmentRepository>()),
+    );
+    sl.registerLazySingleton(
+      () => AddBloodPressureUseCase(assesmentRepo: sl<AssesmentRepository>()),
+    );
   }
 
   void _registerCubit() {
@@ -145,6 +155,12 @@ class AssesmentDependency {
       () => AsamUratCubit(
         getListAsamUratUsecase: sl<GetListAsamUratUseCase>(),
         addAsamUratUsecase: sl<AddAsamUratUseCase>(),
+      ),
+    );
+    sl.registerLazySingleton(
+      () => TensiCubit(
+        getListTekananDarahUseCase: sl<GetListBloodPressureUseCase>(),
+        addBloodPressureUseCase: sl<AddBloodPressureUseCase>(),
       ),
     );
   }

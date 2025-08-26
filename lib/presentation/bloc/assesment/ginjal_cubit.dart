@@ -21,7 +21,13 @@ class GinjalCubit extends Cubit<BaseState<List<GinjalEntity>>> {
 
     return result.fold(
       (failure) => emit(BaseState.error(message: failure.message)),
-      (data) => emit(BaseState.success(data: data)),
+      (data) {
+        if (data.isEmpty) {
+          emit(BaseState.empty());
+        } else {
+          emit(BaseState.success(data: data));
+        }
+      },
     );
   }
 

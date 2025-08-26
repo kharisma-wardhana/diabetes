@@ -16,6 +16,7 @@ import '../../../bloc/assesment/water_cubit.dart';
 import '../../../widget/base_page.dart';
 import '../../../widget/custom_button.dart';
 import '../widget/custom_date_scroll.dart';
+import '../widget/custom_empty_data.dart';
 
 class KonsumsiAirPage extends StatefulWidget {
   const KonsumsiAirPage({super.key});
@@ -152,6 +153,12 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
           const SizedBox(height: 8),
           BlocBuilder<WaterCubit, BaseState<List<WaterEntity>>>(
             builder: (context, state) {
+              if (state.isEmpty) {
+                return const CustomEmptyData(
+                  text: 'Konsumsi Air',
+                  routePage: addWaterPage,
+                );
+              }
               if (state.isSuccess && state.data != null) {
                 return Form(
                   key: _formKey,

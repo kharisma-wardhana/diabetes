@@ -52,7 +52,7 @@ class _TensiPageState extends State<TensiPage> {
           SizedBox(height: 8.h),
           BlocBuilder<TensiCubit, BaseState<List<TensiEntity>>>(
             builder: (context, state) {
-              if (state.isSuccess && state.data!.isEmpty) {
+              if (state.isEmpty) {
                 return const CustomEmptyData(
                   text: 'Tekanan Darah',
                   routePage: addTensiPage,

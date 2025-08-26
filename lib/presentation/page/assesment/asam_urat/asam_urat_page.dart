@@ -55,7 +55,7 @@ class _AsamUratPageState extends State<AsamUratPage> {
           const SizedBox(height: 8),
           BlocBuilder<AsamUratCubit, BaseState<List<AsamUratEntity>>>(
             builder: (context, state) {
-              if (state.isSuccess && state.data!.isEmpty) {
+              if (state.isEmpty) {
                 return const CustomEmptyData(
                   text: 'Asam Urat',
                   routePage: addAsamUratPage,
