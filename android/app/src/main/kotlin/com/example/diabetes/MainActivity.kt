@@ -1,4 +1,4 @@
-package com.example.diabetes
+package com.chickenfish.diabetes
 
 import io.flutter.embedding.android.FlutterActivity
 
