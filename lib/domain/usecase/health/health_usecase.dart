@@ -5,10 +5,10 @@ import '../../../core/error.dart';
 import '../../../core/usecase.dart';
 import '../../entity/health/health_entity.dart';
 
-class HealthUsecase implements UseCase<HealthEntity, List<HealthDataType>> {
-  final Health _health;
+class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
+  final Health health;
 
-  const HealthUsecase(this._health);
+  const HealthUseCase({required this.health});
 
   @override
   Future<Either<Failure, HealthEntity>> call(
@@ -17,7 +17,7 @@ class HealthUsecase implements UseCase<HealthEntity, List<HealthDataType>> {
     final now = DateTime.now();
     final yesterday = now.subtract(Duration(days: 1));
 
-    List<HealthDataPoint> data = await _health.getHealthDataFromTypes(
+    List<HealthDataPoint> data = await health.getHealthDataFromTypes(
       types: params,
       startTime: yesterday,
       endTime: now,

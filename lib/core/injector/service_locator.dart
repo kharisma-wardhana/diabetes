@@ -54,5 +54,6 @@ class SharedLibDependencies {
         aOptions: AndroidOptions(encryptedSharedPreferences: true),
       ),
     );
+    sl.registerLazySingleton<Health>(() => Health());
   }
 }

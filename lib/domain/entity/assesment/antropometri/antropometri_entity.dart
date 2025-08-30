@@ -15,6 +15,7 @@ abstract class AntropometriEntity with _$AntropometriEntity {
     String? activity,
     String? waistStatus,
     String? armStatus,
+    int? diabetesType,
   }) = _AntropometriEntity;
 
   factory AntropometriEntity.fromJson(Map<String, dynamic> json) =>

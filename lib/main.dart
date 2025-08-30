@@ -10,6 +10,8 @@ import 'core/connectivity_manager.dart';
 import 'core/error_handler.dart';
 import 'core/injector/service_locator.dart';
 import 'gen/colors.gen.dart';
+import 'presentation/bloc/activity/activity_bloc.dart';
+import 'presentation/bloc/activity/activity_event.dart';
 import 'presentation/bloc/assesment/antropometri_cubit.dart';
 import 'presentation/bloc/assesment/asam_urat_cubit.dart';
 import 'presentation/bloc/assesment/assesment_cubit.dart';
@@ -69,6 +71,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<GinjalCubit>(create: (_) => sl<GinjalCubit>()),
           BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
           BlocProvider<TensiCubit>(create: (_) => sl<TensiCubit>()),
+          BlocProvider<ActivityBloc>(
+            create: (_) => sl<ActivityBloc>()..add(RequestAuthorization()),
+          ),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(
