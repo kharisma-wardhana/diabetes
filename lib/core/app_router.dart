@@ -18,6 +18,7 @@ import '../presentation/page/auth/login_page.dart';
 import '../presentation/page/auth/register_page.dart';
 import '../presentation/page/home/activitas/activity_page.dart';
 import '../presentation/page/home/activitas/gula_darah_page.dart';
+import '../presentation/page/home/activitas/question_page.dart';
 import '../presentation/page/home/activitas/recommendation_page.dart';
 import '../presentation/page/home/home_page.dart';
 import '../presentation/page/home/kalori/diet_page.dart';
@@ -47,6 +48,8 @@ class AppRoutes {
       case registerPage:
         return MaterialPageRoute(builder: (_) => const RegisterPage());
       // Activity Pages
+      case questionPage:
+        return MaterialPageRoute(builder: (_) => const QuestionPage());
       case gulaDarahPage:
         return MaterialPageRoute(builder: (_) => const GulaDarahPage());
       case recommendationPage:

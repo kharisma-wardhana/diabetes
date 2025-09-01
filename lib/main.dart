@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
           BlocProvider<TensiCubit>(create: (_) => sl<TensiCubit>()),
           BlocProvider<ActivityBloc>(
-            create: (_) => sl<ActivityBloc>()..add(RequestAuthorization()),
+            create: (_) => sl<ActivityBloc>()..add(CheckPermissions()),
           ),
         ],
         child: GlobalAuthListener(

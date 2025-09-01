@@ -12,6 +12,7 @@ const String splashPage = '/';
 const String loginPage = '/login';
 const String registerPage = '/register';
 const String onboardingPage = '/onboarding';
+const String questionPage = '/question';
 const String gulaDarahPage = '/check-gula-darah';
 const String recommendationPage = '/recommendation';
 const String activityPage = '/activity';

@@ -17,12 +17,7 @@ final sl = GetIt.instance;
 class Injector {
   Future<void> initialize() async {
     await _registerSharedDependencies();
-    _registerHealth();
     _registerDomains();
-  }
-
-  void _registerHealth() {
-    sl.registerLazySingleton<Health>(() => Health());
   }
 
   Future<void> _registerSharedDependencies() async {

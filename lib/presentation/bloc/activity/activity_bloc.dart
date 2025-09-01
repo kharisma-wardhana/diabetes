@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../core/error.dart';
+import '../../../domain/entity/health/health_entity.dart';
 import '../../../domain/usecase/health/authorization_usecase.dart';
 import '../../../domain/usecase/health/health_usecase.dart';
 import 'activity_event.dart';
@@ -58,7 +60,16 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
     final data = await healthUsecase.call(types);
     data.fold(
-      (failure) => emit(ActivityState.error(message: failure.message)),
+      (failure) {
+        failure is NotFoundFailure
+            ? emit(const ActivityState.empty('No activity data found'))
+            : emit(
+                ActivityState.error(
+                  message: 'Failed to fetch activity data',
+                  error: failure,
+                ),
+              );
+      },
       (data) => emit(
         ActivityState.success(data: data, message: 'Data fetched successfully'),
       ),
@@ -288,9 +299,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   }
 
   // Helper method to get current health data
-  Future<dynamic> _getCurrentHealthData() async {
+  Future<HealthEntity> _getCurrentHealthData() async {
     // This should return actual HealthEntity data
     // For now, returning a placeholder
-    return {};
+    return const HealthEntity(steps: 0, heartRate: 0, bloodPressure: "-");
   }
 }
