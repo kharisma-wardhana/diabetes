@@ -10,6 +10,7 @@ import '../../../../core/injector/service_locator.dart';
 import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
+import '../../../widget/custom_scrollable.dart';
 import 'widget/health_data.dart';
 
 class DashboardActivityPage extends StatefulWidget {
@@ -63,7 +64,7 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
       child: BlocBuilder<ActivityBloc, ActivityState>(
         builder: (context, state) {
           return state.map(
-            initial: (_) => _buildScrollableContent(
+            initial: (_) => CustomScrollable(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -80,8 +81,8 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            loading: (_) => _buildScrollableContent(
-              child: const Center(
+            loading: (_) => const CustomScrollable(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -92,8 +93,8 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            checkPermissions: (_) => _buildScrollableContent(
-              child: const Center(
+            checkPermissions: (_) => const CustomScrollable(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -104,8 +105,8 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            permissionsGranted: (_) => _buildScrollableContent(
-              child: const Center(
+            permissionsGranted: (_) => const CustomScrollable(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -116,7 +117,7 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            permissionsDenied: (_) => _buildScrollableContent(
+            permissionsDenied: (_) => CustomScrollable(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -137,16 +138,16 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            planRegistered: (_) => _buildScrollableContent(
+            planRegistered: (_) => CustomScrollable(
               child: const Center(child: Text('Plan Registered')),
             ),
-            planUpdated: (_) => _buildScrollableContent(
+            planUpdated: (_) => CustomScrollable(
               child: const Center(child: Text('Plan Updated')),
             ),
-            syncCompleted: (_) => _buildScrollableContent(
+            syncCompleted: (_) => CustomScrollable(
               child: const Center(child: Text('Sync Completed')),
             ),
-            synchronizing: (_) => _buildScrollableContent(
+            synchronizing: (_) => CustomScrollable(
               child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +163,7 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
               physics: AlwaysScrollableScrollPhysics(),
               child: HealthData(),
             ),
-            empty: (_) => _buildScrollableContent(
+            empty: (_) => CustomScrollable(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +185,7 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            error: (err) => _buildScrollableContent(
+            error: (err) => CustomScrollable(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -215,16 +216,6 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildScrollableContent({required Widget child}) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
-        child: child,
       ),
     );
   }
