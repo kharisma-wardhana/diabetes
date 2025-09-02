@@ -12,7 +12,9 @@ abstract class UserEntity with _$UserEntity {
     required String mobile,
     required String gender,
     required String dob,
+    int? age,
     String? token,
+    int? typeDiabetes,
     bool? isOnboardingComplete,
     bool? isAntropometriComplete,
   }) = _UserEntity;

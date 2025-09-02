@@ -145,6 +145,8 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<UserEntity>>
         emit(const BaseState.initial());
       }
     });
+
+    on<UpdateTypeDiabetesEvent>(_updateTypeDiabetes);
   }
 
   // ConnectivityAware implementation
@@ -171,5 +173,28 @@ class AuthBloc extends Bloc<AuthEvent, BaseState<UserEntity>>
     // Unregister from connectivity updates
     unregisterFromConnectivityUpdates();
     return super.close();
+  }
+
+  void _updateTypeDiabetes(
+    UpdateTypeDiabetesEvent event,
+    Emitter<BaseState<UserEntity>> emit,
+  ) async {
+    if (state.isSuccess) {
+      final currentUser = state.data!;
+      final updatedUser = currentUser.copyWith(
+        typeDiabetes: event.typeDiabetes,
+      );
+
+      // Update the user in secure storage
+      await secureStorage.delete(key: tokenKey);
+      // Write the updated user back to secure storage
+      await secureStorage.write(
+        key: tokenKey,
+        value: jsonEncode(updatedUser.toJson()),
+      );
+      emit(BaseState.success(data: updatedUser));
+    } else {
+      emit(const BaseState.initial());
+    }
   }
 }

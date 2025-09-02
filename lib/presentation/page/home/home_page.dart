@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) async {
     setState(() {
       _currentPage = index;
       _pageController.jumpToPage(_currentPage);
@@ -41,13 +41,13 @@ class _HomePageState extends State<HomePage> {
   String _updateTitle(int currentPage) {
     switch (currentPage) {
       case 0:
-        return 'Aktivitas';
-      case 1:
-        return 'Kalori';
-      case 2:
-        return 'Obat';
-      case 3:
         return 'Info';
+      case 1:
+        return 'Aktivitas';
+      case 2:
+        return 'Kalori';
+      case 3:
+        return 'Obat';
       default:
         return '';
     }
@@ -72,10 +72,10 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           onPageChanged: _onItemTapped,
           children: const [
+            InfoPage(),
             DashboardActivityPage(),
             DashboardKaloriPage(),
             DashboardObatPage(),
-            InfoPage(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -85,6 +85,7 @@ class _HomePageState extends State<HomePage> {
           selectedItemColor: Colors.white,
           selectedLabelStyle: TextStyle(color: Colors.white),
           items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Info'),
             BottomNavigationBarItem(
               icon: Icon(Icons.run_circle),
               label: 'Aktivitas',
@@ -97,7 +98,6 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.medical_information),
               label: 'Obat',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Info'),
           ],
         ),
       ),

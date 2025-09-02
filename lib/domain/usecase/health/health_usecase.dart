@@ -1,8 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:diabetes/core/base_state.dart';
 import 'package:health/health.dart';
 
 import '../../../core/error.dart';
+import '../../../core/injector/service_locator.dart';
 import '../../../core/usecase.dart';
+import '../../../presentation/bloc/assesment/antropometri_cubit.dart';
 import '../../entity/health/health_entity.dart';
 
 class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
@@ -15,11 +18,11 @@ class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
     List<HealthDataType> params,
   ) async {
     final now = DateTime.now();
-    final yesterday = now.subtract(Duration(days: 1));
+    final lastMonth = now.subtract(Duration(days: 30));
 
     List<HealthDataPoint> data = await health.getHealthDataFromTypes(
       types: params,
-      startTime: yesterday,
+      startTime: lastMonth,
       endTime: now,
     );
 
@@ -46,14 +49,7 @@ class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
           break;
       }
     }
-
-    if (steps == 0 &&
-        heartRate == null &&
-        systolic == null &&
-        diastolic == null) {
-      return Left(NotFoundFailure("Tidak ada data kesehatan yang ditemukan."));
-    }
-
+    final weight = sl<AntropometriCubit>().state.data?.weight;
     return Right(
       HealthEntity(
         steps: steps.toInt(),
@@ -61,6 +57,7 @@ class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
         bloodPressure: systolic != null && diastolic != null
             ? "$systolic/$diastolic"
             : "-",
+        kaloriBurned: steps.toInt() * ((weight ?? 0) * 0.0005),
       ),
     );
   }

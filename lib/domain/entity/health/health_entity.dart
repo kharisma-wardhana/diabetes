@@ -9,6 +9,9 @@ abstract class HealthEntity with _$HealthEntity {
     required int steps,
     required int heartRate,
     required String bloodPressure,
+    required double kaloriBurned,
+    int? bloodSugar,
+    int? stepGoal,
   }) = _HealthEntity;
 
   factory HealthEntity.fromJson(Map<String, dynamic> json) =>

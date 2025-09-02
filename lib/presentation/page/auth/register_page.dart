@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // Logo dan form scrollable
         SizedBox(
           width: 200.w,
-          child: Image.asset(Assets.images.logoElan.path, fit: BoxFit.cover),
+          child: Image.asset(Assets.images.elanIcon.path, fit: BoxFit.cover),
         ),
         32.verticalSpace,
         Text(
@@ -257,7 +257,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Positioned(
                 right: 0,
                 child: IconButton(
-                  icon: Icon(Icons.close, size: 60.w),
+                  icon: Icon(Icons.close_rounded, size: 50.w),
                   onPressed: () {
                     Navigator.pop(context);
                   },

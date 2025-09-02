@@ -6,12 +6,16 @@ import '../presentation/page/assesment/asam_urat/asam_urat_page.dart';
 import '../presentation/page/assesment/assesment_page.dart';
 import '../presentation/page/assesment/ginjal/add_ginjal_page.dart';
 import '../presentation/page/assesment/ginjal/ginjal_page.dart';
+import '../presentation/page/assesment/gula/add_gula_page.dart';
+import '../presentation/page/assesment/gula/gula_page.dart';
 import '../presentation/page/assesment/hb/add_hb_page.dart';
 import '../presentation/page/assesment/hb/hb_page.dart';
 import '../presentation/page/assesment/kolesterol/add_kolesterol_page.dart';
 import '../presentation/page/assesment/kolesterol/kolesterol_page.dart';
 import '../presentation/page/assesment/konsumsi_air/add_konsumsi_air_page.dart';
 import '../presentation/page/assesment/konsumsi_air/konsumsi_air_page.dart';
+import '../presentation/page/assesment/obat/add_obat_page.dart';
+import '../presentation/page/assesment/obat/obat_page.dart';
 import '../presentation/page/assesment/tekanan_darah/add_tensi_page.dart';
 import '../presentation/page/assesment/tekanan_darah/tensi_page.dart';
 import '../presentation/page/auth/login_page.dart';
@@ -23,6 +27,7 @@ import '../presentation/page/home/activitas/recommendation_page.dart';
 import '../presentation/page/home/home_page.dart';
 import '../presentation/page/home/kalori/diet_page.dart';
 import '../presentation/page/home/kalori/kalori_intake_page.dart';
+import '../presentation/page/home/kalori/kalori_page.dart';
 import '../presentation/page/home/kalori/tujuan_diet_page.dart';
 import '../presentation/page/home/info/artikel/artikel_page.dart';
 import '../presentation/page/home/info/artikel/detail_artikel_page.dart';
@@ -63,6 +68,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ActivityPage());
       //============================================================
       // Kalori Pages
+      case kaloriPage:
+        return MaterialPageRoute(builder: (_) => const KaloriPage());
       case tujuanDietPage:
         return MaterialPageRoute(
           builder: (context) {
@@ -79,6 +86,12 @@ class AppRoutes {
         );
       case dietPage:
         return MaterialPageRoute(builder: (_) => const DietPage());
+      //============================================================
+      // Obat Pages
+      case obatPage:
+        return MaterialPageRoute(builder: (_) => const ObatPage());
+      case addObatPage:
+        return MaterialPageRoute(builder: (_) => const AddObatPage());
       //============================================================
       case antropometriPage:
         return MaterialPageRoute(builder: (_) => const AntropometriPage());
@@ -117,10 +130,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const GinjalPage());
       case addGinjalPage:
         return MaterialPageRoute(builder: (_) => const AddGinjalPage());
-      // case gulaPage:
-      //   return MaterialPageRoute(builder: (_) => const GulaPage());
-      // case addGulaPage:
-      //   return MaterialPageRoute(builder: (_) => const AddGulaPage());
+      case gulaPage:
+        return MaterialPageRoute(builder: (_) => const GulaPage());
+      case addGulaPage:
+        return MaterialPageRoute(builder: (_) => const AddGulaPage());
       case kolesterolPage:
         return MaterialPageRoute(builder: (_) => const KolesterolPage());
       case addKolesterolPage:

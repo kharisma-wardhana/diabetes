@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-
 import '../gen/assets.gen.dart';
 
 const String baseURL = 'https://elan.cmutiah.com/api';
 const String tokenKey = 'auth_token';
 const String antropometriKey = 'antropometri_data';
+const String activityKey = 'activity_data';
 const String userIDKey = 'user_id';
 
 // RouteName Config
@@ -16,6 +15,7 @@ const String questionPage = '/question';
 const String gulaDarahPage = '/check-gula-darah';
 const String recommendationPage = '/recommendation';
 const String activityPage = '/activity';
+const String kaloriPage = '/kalori';
 const String tujuanDietPage = '/tujuan-diet';
 const String kaloriIntakePage = '/kalori-intake';
 const String dietPage = '/diet';
@@ -83,7 +83,7 @@ final List<Map<String, dynamic>> edukasi = [
   },
 ];
 
-List<String> questions = [
+final List<String> questions = [
   'Apakah Anda mengalami gejala seperti sering haus, sering buang air kecil?',
   'Apakah Anda sering merasa lemas, lapar berlebihan, atau berat badan turun dratis?',
   'Apakah Anda memiliki riwayat diabetes di keluarga (ayah/ibu/saudara)?',
@@ -91,7 +91,7 @@ List<String> questions = [
   'Apakah Anda berusia diatas 40 tahun dan jarang bergerak?',
 ];
 
-Map<String, List<String>> recommendations = {
+final Map<String, List<String>> recommendations = {
   'normal': [
     'Pertahankan pola makan sehat (sayur, buah, dan hindari konsumsi gula hingga minyak berlebih).',
     'Lakukan aktivitas fisik teratur minimal 30 menit setiap hari.',
@@ -109,20 +109,41 @@ Map<String, List<String>> recommendations = {
   ],
 };
 
-List<DropdownMenuEntry<String>> activityOptions = [
-  DropdownMenuEntry<String>(value: 'Berjalan', label: 'Berjalan'),
-  DropdownMenuEntry<String>(value: 'Senam', label: 'Senam'),
-  DropdownMenuEntry<String>(value: 'Bersepeda', label: 'Bersepeda'),
-  DropdownMenuEntry<String>(value: 'Berenang', label: 'Berenang'),
-  DropdownMenuEntry<String>(value: 'Angkat Beban', label: 'Angkat Beban'),
-  DropdownMenuEntry<String>(value: 'Lainnya', label: 'Lainnya'),
+final List<String> obatType = [
+  '',
+  'Tablet',
+  'Kaplet',
+  'Kapsul',
+  'IU',
+  'mL',
+  'Sendok',
+  'Tetes',
+  'Olesan',
+  'Sachet',
+  'Sachet',
+];
+
+final List<String> activityOptions = [
+  'Berjalan Kaki',
+  'Jogging',
+  'Lari',
+  'Berenang',
+  'Bersepeda',
+  'Senam',
+  'Angkat Beban Ringan - Sedang',
+  'Angkat Beban Berat',
+  'Voli',
+  'Badminton',
+  'Sepak Bola/Futsal',
+  'Tenis',
+  'Tenis Meja',
 ];
 
 const int typeNormal = 0;
 const int typeDM = 1;
 const int typePreDM = 2;
 
-List<String> karboOptions = [
+final List<String> karboOptions = [
   'Nasi Merah 150 gr (1 mangkok kecil) (200 kkal)',
   'Nasi Putih 150 gr (1 mangkok kecil) (250 kkal)',
   'Nasi Gurih/Liwet 150 gr (1 mangkok kecil) (290 kkal)',
@@ -134,10 +155,9 @@ List<String> karboOptions = [
   'Kentang rebus 100 gr (87 kkal)',
   'Oatmeal 1 mangkuk kecil (150 kkal)',
   'Biskuit 1 keping (35 kkal)',
-  'Optional (Connect ke Google)',
 ];
 
-List<String> proteinOptions = [
+final List<String> proteinOptions = [
   'Telur rebus 1 butir (90 kkal)',
   'Ikan 1 potong 60 gr (120 kkal)',
   'Tempe 1 potong ukuran kecil (90 kkal)',
@@ -147,10 +167,9 @@ List<String> proteinOptions = [
   'Daging Sapi 1 potong 100 gr (250 kkal)',
   'Udang 1 buah (9 kkal)',
   'Kacang rebus 100 gr (155 kkal)',
-  'Optional (Connect ke Google)',
 ];
 
-List<String> seratOptions = [
+final List<String> seratOptions = [
   'Sayur bayam 1 mangkuk (40 kkal)',
   'Daun singkong 100 gr (50 kkal)',
   'Daun pepaya 100 gr (50 kkal)',
@@ -182,14 +201,13 @@ List<String> seratOptions = [
   'Sawo 100 gr (83 kkal)',
   'Jambu air 100 gr (46 kkal)',
   'Kelengkeng 100 gr (60 kkal)',
-  'Optional (Connect ke Google)',
 ];
 
 const normalWeight = 'Normal';
-const underWeight = 'Underweight';
-const overWeight = 'Overweight';
+const underWeight = 'Kurus';
+const overWeight = 'Obesitas';
 
-Map<String, Map<String, List<String>>> tujuanDiet = {
+final Map<String, Map<String, List<String>>> tujuanDiet = {
   'DM': {
     underWeight: [
       'Meningkatkan berat badan secara sehat dan bertahap',
@@ -226,7 +244,7 @@ Map<String, Map<String, List<String>>> tujuanDiet = {
   },
 };
 
-Map<String, List<String>> dataKaloriIntake = {
+final Map<String, List<String>> dataKaloriIntake = {
   'DM': [
     'Karbohidrat 50 - 60%',
     'Lemak sehat 20 - 25%',

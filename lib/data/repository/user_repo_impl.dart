@@ -8,7 +8,7 @@ import '../datasource/remote/user_remote_datasource.dart';
 class UserRepoImpl implements UserRepository {
   final UserRemoteDatasource remoteDataSource;
 
-  UserRepoImpl(this.remoteDataSource);
+  UserRepoImpl({required this.remoteDataSource});
 
   @override
   Future<Either<Failure, UserEntity>> register(

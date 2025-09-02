@@ -11,7 +11,6 @@ import 'core/error_handler.dart';
 import 'core/injector/service_locator.dart';
 import 'gen/colors.gen.dart';
 import 'presentation/bloc/activity/activity_bloc.dart';
-import 'presentation/bloc/activity/activity_event.dart';
 import 'presentation/bloc/assesment/antropometri_cubit.dart';
 import 'presentation/bloc/assesment/asam_urat_cubit.dart';
 import 'presentation/bloc/assesment/assesment_cubit.dart';
@@ -19,6 +18,7 @@ import 'presentation/bloc/assesment/ginjal_cubit.dart';
 import 'presentation/bloc/assesment/gula_cubit.dart';
 import 'presentation/bloc/assesment/hb1ac_cubit.dart';
 import 'presentation/bloc/assesment/kolesterol_cubit.dart';
+import 'presentation/bloc/assesment/obat_cubit.dart';
 import 'presentation/bloc/assesment/tensi_cubit.dart';
 import 'presentation/bloc/assesment/water_cubit.dart';
 import 'presentation/bloc/auth/auth_bloc.dart';
@@ -26,6 +26,7 @@ import 'presentation/bloc/auth/auth_event.dart';
 import 'presentation/bloc/info/article_cubit.dart';
 import 'presentation/bloc/info/doctor_cubit.dart';
 import 'presentation/bloc/info/video_cubit.dart';
+import 'presentation/bloc/kalori/kalori_bloc.dart';
 import 'presentation/page/splash_page.dart';
 import 'presentation/widget/global_auth_listener.dart';
 
@@ -71,13 +72,13 @@ class MyApp extends StatelessWidget {
           BlocProvider<GinjalCubit>(create: (_) => sl<GinjalCubit>()),
           BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
           BlocProvider<TensiCubit>(create: (_) => sl<TensiCubit>()),
-          BlocProvider<ActivityBloc>(
-            create: (_) => sl<ActivityBloc>()..add(CheckPermissions()),
-          ),
+          BlocProvider<ActivityBloc>(create: (_) => sl<ActivityBloc>()),
+          BlocProvider<ObatCubit>(create: (_) => sl<ObatCubit>()),
+          BlocProvider<KaloriBloc>(create: (_) => sl<KaloriBloc>()),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(
-            title: 'ELAN',
+            title: 'Digital DM-Care',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               appBarTheme: AppBarTheme(

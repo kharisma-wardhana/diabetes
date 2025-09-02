@@ -13,7 +13,9 @@ _UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
   mobile: json['mobile'] as String,
   gender: json['gender'] as String,
   dob: json['dob'] as String,
+  age: (json['age'] as num?)?.toInt(),
   token: json['token'] as String?,
+  typeDiabetes: (json['typeDiabetes'] as num?)?.toInt(),
   isOnboardingComplete: json['isOnboardingComplete'] as bool?,
   isAntropometriComplete: json['isAntropometriComplete'] as bool?,
 );
@@ -26,7 +28,9 @@ Map<String, dynamic> _$UserEntityToJson(_UserEntity instance) =>
       'mobile': instance.mobile,
       'gender': instance.gender,
       'dob': instance.dob,
+      'age': instance.age,
       'token': instance.token,
+      'typeDiabetes': instance.typeDiabetes,
       'isOnboardingComplete': instance.isOnboardingComplete,
       'isAntropometriComplete': instance.isAntropometriComplete,
     };

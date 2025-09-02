@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:diabetes/presentation/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,6 +9,7 @@ import '../../../../core/injector/service_locator.dart';
 import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
+import '../../../widget/custom_button.dart';
 import '../../../widget/custom_scrollable.dart';
 import 'widget/health_data.dart';
 
@@ -25,9 +25,9 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
   void initState() {
     super.initState();
     // Trigger initial data fetch
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ActivityBloc>().add(const FetchActivityData());
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   context.read<ActivityBloc>().add(const FetchActivityData());
+    // });
   }
 
   Future<void> _onRefresh() async {
@@ -64,22 +64,41 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
       child: BlocBuilder<ActivityBloc, ActivityState>(
         builder: (context, state) {
           return state.map(
-            initial: (_) => CustomScrollable(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.health_and_safety, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
-                    CustomButton(
-                      textButton: 'Masukkan Data Kesehatan',
-                      onTap: () {
-                        sl<AppNavigator>().pushNamed(questionPage);
-                      },
-                    ),
-                  ],
+            initial: (_) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.inbox, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                const Text('Tidak mempunyai data'),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomButton(
+                    textButton: 'Buat Data Kesehatan',
+                    onTap: () {
+                      sl<AppNavigator>().pushNamed(questionPage);
+                    },
+                  ),
                 ),
-              ),
+              ],
+            ),
+            empty: (_) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.inbox, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                const Text('Tidak mempunyai data'),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomButton(
+                    textButton: 'Buat Data Kesehatan',
+                    onTap: () {
+                      sl<AppNavigator>().pushNamed(questionPage);
+                    },
+                  ),
+                ),
+              ],
             ),
             loading: (_) => const CustomScrollable(
               child: Center(
@@ -138,52 +157,9 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                 ),
               ),
             ),
-            planRegistered: (_) => CustomScrollable(
-              child: const Center(child: Text('Plan Registered')),
-            ),
-            planUpdated: (_) => CustomScrollable(
-              child: const Center(child: Text('Plan Updated')),
-            ),
-            syncCompleted: (_) => CustomScrollable(
-              child: const Center(child: Text('Sync Completed')),
-            ),
-            synchronizing: (_) => CustomScrollable(
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Synchronizing...'),
-                  ],
-                ),
-              ),
-            ),
             success: (_) => const SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: HealthData(),
-            ),
-            empty: (_) => CustomScrollable(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.inbox, size: 64, color: Colors.grey),
-                    const SizedBox(height: 16),
-                    const Text('Tidak mempunyai data'),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomButton(
-                        textButton: 'Buat Data Kesehatan',
-                        onTap: () {
-                          sl<AppNavigator>().pushNamed(questionPage);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
             error: (err) => CustomScrollable(
               child: Center(

@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
         // Logo dan form scrollable
         SizedBox(
           width: 200.w,
-          child: Image.asset(Assets.images.logoElan.path, fit: BoxFit.cover),
+          child: Image.asset(Assets.images.elanIcon.path, fit: BoxFit.cover),
         ),
         32.verticalSpace,
         CustomTextField(
@@ -180,14 +180,6 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.white,
           body: Stack(
             children: [
-              Positioned(
-                child: SizedBox(
-                  child: Image.asset(
-                    Assets.images.side.path,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
               Center(
                 child: Form(
                   key: _formKey,

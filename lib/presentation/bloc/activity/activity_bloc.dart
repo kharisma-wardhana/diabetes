@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/error.dart';
+import '../../../core/usecase.dart';
+import '../../../domain/entity/assesment/activity/activity_entity.dart';
 import '../../../domain/entity/health/health_entity.dart';
+import '../../../domain/usecase/assesment/add_activity_usecase.dart';
 import '../../../domain/usecase/health/authorization_usecase.dart';
 import '../../../domain/usecase/health/health_usecase.dart';
 import 'activity_event.dart';
@@ -12,15 +19,25 @@ import 'activity_state.dart';
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   final AuthorizationUseCase authorizationUsecase;
   final HealthUseCase healthUsecase;
+  final AddActivityUseCase addActivityUsecase;
+  final FlutterSecureStorage storage;
+
+  // Storage keys
+  static const String _activityDataKey = 'activity_data';
+  static const String _permissionsStatusKey = 'permissions_status';
+  static const String _lastSyncTimeKey = 'last_sync_time';
 
   ActivityBloc({
     required this.authorizationUsecase,
     required this.healthUsecase,
+    required this.addActivityUsecase,
+    required this.storage,
   }) : super(const ActivityState.initial()) {
     // Basic data operations
     on<FetchActivityData>(_onFetchActivityData);
     on<RefreshActivityData>(_onRefreshActivityData);
-    on<ClearActivityData>(_onClearActivityData);
+    on<LoadCachedData>(_onLoadCachedData);
+    on<ClearCache>(_onClearCache);
 
     // Permission management
     on<RequestAuthorization>(_onRequestAuthorization);
@@ -29,18 +46,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     // Activity plan management
     on<RegisterActivityPlan>(_onRegisterActivityPlan);
     on<UpdateActivityPlan>(_onUpdateActivityPlan);
-    on<DeleteActivityPlan>(_onDeleteActivityPlan);
 
-    // Data synchronization
-    on<StartSync>(_onStartSync);
-    on<StopSync>(_onStopSync);
-    on<ForceSync>(_onForceSync);
-
-    // Activity tracking
-    on<StartActivityTracking>(_onStartActivityTracking);
-    on<StopActivityTracking>(_onStopActivityTracking);
-    on<PauseActivityTracking>(_onPauseActivityTracking);
-    on<ResumeActivityTracking>(_onResumeActivityTracking);
+    // Load persisted state on initialization
+    _loadPersistedState();
   }
 
   Future<void> _onFetchActivityData(
@@ -57,9 +65,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     ];
 
     await authorizationUsecase.call(types);
-
-    final data = await healthUsecase.call(types);
-    data.fold(
+    final result = await healthUsecase.call(types);
+    result.fold(
       (failure) {
         failure is NotFoundFailure
             ? emit(const ActivityState.empty('No activity data found'))
@@ -70,9 +77,16 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
                 ),
               );
       },
-      (data) => emit(
-        ActivityState.success(data: data, message: 'Data fetched successfully'),
-      ),
+      (data) {
+        // Save successful data to storage
+        _saveActivityData(data);
+        emit(
+          ActivityState.success(
+            data: data,
+            message: 'Data fetched successfully',
+          ),
+        );
+      },
     );
   }
 
@@ -85,11 +99,36 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     add(const ActivityEvent.fetchData());
   }
 
-  Future<void> _onClearActivityData(
-    ClearActivityData event,
+  Future<void> _onLoadCachedData(
+    LoadCachedData event,
     Emitter<ActivityState> emit,
   ) async {
-    emit(const ActivityState.empty('Activity data cleared'));
+    try {
+      final activityDataJson = await storage.read(key: _activityDataKey);
+      if (activityDataJson != null) {
+        final data = HealthEntity.fromJson(jsonDecode(activityDataJson));
+        emit(
+          ActivityState.success(
+            data: data,
+            message: 'Loaded cached activity data',
+          ),
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading cached data: $e');
+      }
+      // If error loading cache, proceed with fresh data fetch
+      add(const ActivityEvent.fetchData());
+    }
+  }
+
+  Future<void> _onClearCache(
+    ClearCache event,
+    Emitter<ActivityState> emit,
+  ) async {
+    await _clearPersistedData();
+    emit(const ActivityState.initial());
   }
 
   Future<void> _onRequestAuthorization(
@@ -103,9 +142,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     final sensorsPermission = await Permission.sensors.request();
 
     if (activityPermission.isGranted && sensorsPermission.isGranted) {
+      _savePermissionsStatus(true);
       emit(const ActivityState.permissionsGranted());
       add(const ActivityEvent.fetchData());
     } else {
+      _savePermissionsStatus(false);
       emit(const ActivityState.permissionsDenied());
     }
   }
@@ -120,8 +161,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     final sensorsPermission = await Permission.sensors.status;
 
     if (activityPermission.isGranted && sensorsPermission.isGranted) {
+      _savePermissionsStatus(true);
       emit(const ActivityState.permissionsGranted());
+      add(const ActivityEvent.fetchData());
     } else {
+      _savePermissionsStatus(false);
       emit(const ActivityState.permissionsDenied());
     }
   }
@@ -133,16 +177,17 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     emit(const ActivityState.loading('Registering activity plan...'));
 
     try {
-      // Simulate plan registration logic
-      await Future.delayed(const Duration(seconds: 2));
-      final planId = DateTime.now().millisecondsSinceEpoch.toString();
-
-      emit(
-        ActivityState.planRegistered(
-          planId: planId,
-          message: 'Activity plan registered successfully',
+      await addActivityUsecase.call(
+        AddParams(
+          data: ActivityEntity(
+            name: event.activityName,
+            date: DateTime.now().toIso8601String().split('T')[0],
+            hour: 0,
+            minute: 0,
+          ),
         ),
       );
+      add(const FetchActivityData());
     } catch (error) {
       emit(
         ActivityState.error(
@@ -160,15 +205,17 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     emit(const ActivityState.loading('Updating activity plan...'));
 
     try {
-      // Simulate plan update logic
-      await Future.delayed(const Duration(seconds: 1));
-
-      emit(
-        ActivityState.planUpdated(
-          planId: event.planId,
-          message: 'Activity plan updated successfully',
+      await addActivityUsecase.call(
+        AddParams(
+          data: ActivityEntity(
+            name: event.activityName,
+            date: DateTime.now().toIso8601String().split('T')[0],
+            hour: 0,
+            minute: 0,
+          ),
         ),
       );
+      add(const FetchActivityData());
     } catch (error) {
       emit(
         ActivityState.error(
@@ -179,129 +226,68 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     }
   }
 
-  Future<void> _onDeleteActivityPlan(
-    DeleteActivityPlan event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.loading('Deleting activity plan...'));
-
+  // Persistence methods
+  Future<void> _loadPersistedState() async {
     try {
-      // Simulate plan deletion logic
-      await Future.delayed(const Duration(seconds: 1));
+      // Check if we have cached activity data and trigger loading if found
+      final activityDataJson = await storage.read(key: _activityDataKey);
+      if (activityDataJson != null) {
+        // Add an event to load the cached data
+        add(const LoadCachedData());
+      }
 
-      emit(const ActivityState.empty('Activity plan deleted successfully'));
-    } catch (error) {
-      emit(
-        ActivityState.error(
-          message: 'Failed to delete activity plan',
-          error: error,
-        ),
-      );
+      // Check permissions status
+      final permissionsStatus = await storage.read(key: _permissionsStatusKey);
+      if (permissionsStatus == 'denied') {
+        add(const CheckPermissions());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        // If there's an error loading persisted state, continue with initial state
+        print('Error loading persisted state: $e');
+      }
     }
   }
 
-  Future<void> _onStartSync(
-    StartSync event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.synchronizing('Starting data synchronization...'));
-
+  Future<void> _saveActivityData(HealthEntity data) async {
     try {
-      // Simulate sync logic
-      await Future.delayed(const Duration(seconds: 3));
-
-      emit(
-        ActivityState.syncCompleted(
-          lastSync: DateTime.now(),
-          message: 'Data synchronization completed',
-        ),
+      await storage.write(
+        key: _activityDataKey,
+        value: jsonEncode(data.toJson()),
       );
-    } catch (error) {
-      emit(
-        ActivityState.error(message: 'Synchronization failed', error: error),
+      await storage.write(
+        key: _lastSyncTimeKey,
+        value: DateTime.now().toIso8601String(),
       );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving activity data: $e');
+      }
     }
   }
 
-  Future<void> _onStopSync(StopSync event, Emitter<ActivityState> emit) async {
-    emit(const ActivityState.initial());
-  }
-
-  Future<void> _onForceSync(
-    ForceSync event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.synchronizing('Force synchronizing data...'));
-    add(const ActivityEvent.startSync());
-  }
-
-  Future<void> _onStartActivityTracking(
-    StartActivityTracking event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.loading('Starting activity tracking...'));
-
+  Future<void> _savePermissionsStatus(bool granted) async {
     try {
-      // Simulate tracking start logic
-      await Future.delayed(const Duration(seconds: 1));
-
-      emit(
-        ActivityState.success(
-          data: await _getCurrentHealthData(),
-          message: 'Activity tracking started for ${event.activityType}',
-        ),
+      await storage.write(
+        key: _permissionsStatusKey,
+        value: granted ? 'granted' : 'denied',
       );
-    } catch (error) {
-      emit(
-        ActivityState.error(
-          message: 'Failed to start activity tracking',
-          error: error,
-        ),
-      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving permissions status: $e');
+      }
     }
   }
 
-  Future<void> _onStopActivityTracking(
-    StopActivityTracking event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.loading('Stopping activity tracking...'));
-
+  Future<void> _clearPersistedData() async {
     try {
-      // Simulate tracking stop logic
-      await Future.delayed(const Duration(seconds: 1));
-
-      emit(const ActivityState.empty('Activity tracking stopped'));
-    } catch (error) {
-      emit(
-        ActivityState.error(
-          message: 'Failed to stop activity tracking',
-          error: error,
-        ),
-      );
+      await storage.delete(key: _activityDataKey);
+      await storage.delete(key: _permissionsStatusKey);
+      await storage.delete(key: _lastSyncTimeKey);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error clearing persisted data: $e');
+      }
     }
-  }
-
-  Future<void> _onPauseActivityTracking(
-    PauseActivityTracking event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.loading('Pausing activity tracking...'));
-    // Add pause logic here
-  }
-
-  Future<void> _onResumeActivityTracking(
-    ResumeActivityTracking event,
-    Emitter<ActivityState> emit,
-  ) async {
-    emit(const ActivityState.loading('Resuming activity tracking...'));
-    // Add resume logic here
-  }
-
-  // Helper method to get current health data
-  Future<HealthEntity> _getCurrentHealthData() async {
-    // This should return actual HealthEntity data
-    // For now, returning a placeholder
-    return const HealthEntity(steps: 0, heartRate: 0, bloodPressure: "-");
   }
 }

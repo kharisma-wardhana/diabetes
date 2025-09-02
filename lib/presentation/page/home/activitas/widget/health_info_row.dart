@@ -16,7 +16,7 @@ class HealthInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.all(8.r),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

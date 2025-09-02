@@ -20,30 +20,36 @@ class OnboardingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            Assets.images.logoKemenkes.path,
-            fit: BoxFit.contain,
+        Expanded(
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  Assets.images.logoKemenkes.path,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: 50.h),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 300.h,
+                  child: Image.asset(
+                    Assets.images.logo.path,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 20.h),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 300.h,
-            child: Image.asset(Assets.images.logo.path, fit: BoxFit.contain),
-          ),
+          padding: EdgeInsets.all(16.w),
+          child: CustomButton(textButton: 'Lanjutkan', onTap: onTap),
         ),
-        SizedBox(height: 20.h),
-        SizedBox(
-          height: 100.h,
-          child: Image.asset(Assets.images.logoElan.path, fit: BoxFit.contain),
-        ),
-        SizedBox(height: 20.h),
-        CustomButton(textButton: 'Lanjutkan', onTap: onTap),
       ],
     );
   }

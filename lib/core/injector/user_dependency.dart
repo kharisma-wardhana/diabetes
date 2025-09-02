@@ -24,7 +24,7 @@ class UserDependency {
 
   void _registerRepository() {
     sl.registerLazySingleton<UserRepository>(
-      () => UserRepoImpl(sl<UserRemoteDatasource>()),
+      () => UserRepoImpl(remoteDataSource: sl<UserRemoteDatasource>()),
     );
   }
 

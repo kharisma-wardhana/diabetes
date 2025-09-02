@@ -23,13 +23,8 @@ class AddParams<T> {
 }
 
 class UpdateParams<T> {
-  final int userId;
   final int dataId;
   final T data;
 
-  const UpdateParams({
-    required this.userId,
-    required this.dataId,
-    required this.data,
-  });
+  const UpdateParams({required this.dataId, required this.data});
 }

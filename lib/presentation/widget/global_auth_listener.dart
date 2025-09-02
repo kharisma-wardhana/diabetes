@@ -6,6 +6,7 @@ import '../../core/base_state.dart';
 import '../../core/constant.dart';
 import '../../core/injector/service_locator.dart';
 import '../../domain/entity/user/user_entity.dart';
+import '../bloc/assesment/obat_cubit.dart';
 import '../bloc/auth/auth_bloc.dart';
 
 /// Global widget that listens to AuthBloc state changes and handles navigation
@@ -31,6 +32,8 @@ class GlobalAuthListener extends StatelessWidget {
                 user.isAntropometriComplete!) {
               // Only navigate if not already on home page
               if (currentRoute != homePage) {
+                final now = DateTime.now().toIso8601String().split('T')[0];
+                context.read<ObatCubit>().getAllMedicine(now);
                 navigator.pushNamedAndRemoveUntil(homePage);
               }
             } else {

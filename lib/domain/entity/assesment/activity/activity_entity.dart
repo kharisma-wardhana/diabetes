@@ -9,8 +9,11 @@ abstract class ActivityEntity with _$ActivityEntity {
   const factory ActivityEntity({
     required String name,
     required String date,
-    required int hour,
-    required int minute,
+    int? hour,
+    int? minute,
+    int? step,
+    int? stepGoal,
+    double? kaloriBurned,
   }) = _ActivityEntity;
 
   factory ActivityEntity.fromJson(Map<String, dynamic> json) =>

@@ -7,7 +7,10 @@ import '../../../../core/base_state.dart';
 import '../../../../core/constant.dart';
 import '../../../../core/injector/service_locator.dart';
 import '../../../../domain/entity/assesment/gula_darah/gula_darah_entity.dart';
+import '../../../../domain/entity/user/user_entity.dart';
 import '../../../bloc/assesment/gula_cubit.dart';
+import '../../../bloc/auth/auth_bloc.dart';
+import '../../../bloc/auth/auth_event.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_loading.dart';
 import '../../../widget/custom_text_field.dart';
@@ -46,17 +49,27 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
     if (_formKey.currentState?.validate() != true) {
       return;
     }
+    final type = gulaDarahPuasaController.text.isNotEmpty ? '0' : '1';
     context.read<GulaCubit>().addGula(
-      DateTime.now().toString(),
+      DateTime.now().toIso8601String().split('T')[0],
       TimeOfDay.now().toString(),
-      gulaDarahPuasaController.text.isNotEmpty ? '0' : '1',
-      gulaDarahPuasaController.text,
+      type,
+      type == '0'
+          ? gulaDarahPuasaController.text
+          : gulaDarahSewaktuController.text,
     );
+    final gulaDarahPuasa = gulaDarahPuasaController.text.isNotEmpty
+        ? int.tryParse(gulaDarahPuasaController.text) ?? 0
+        : 0;
+    final gulaDarahSewaktu = gulaDarahSewaktuController.text.isNotEmpty
+        ? int.tryParse(gulaDarahSewaktuController.text) ?? 0
+        : 0;
     setState(() {
-      isDiabetes =
-          gulaDarahPuasaController.text.isNotEmpty &&
-          gulaDarahSewaktuController.text.isNotEmpty;
+      isDiabetes = gulaDarahPuasa > 100 || gulaDarahSewaktu > 180;
     });
+    context.read<AuthBloc>().add(
+      UpdateTypeDiabetesEvent(isDiabetes ? typeDM : typeNormal),
+    );
   }
 
   @override
@@ -110,13 +123,12 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
                       },
                     ),
                     16.verticalSpace,
-                    BlocListener<GulaCubit, BaseState<List<GulaDarahEntity>>>(
+                    BlocListener<AuthBloc, BaseState<UserEntity>>(
                       listener: (context, state) {
                         if (mounted) {
                           setState(() => isLoading = state.isLoading);
                         }
                         if (state.isSuccess) {
-                          setState(() => isLoading = false);
                           sl<AppNavigator>().pushNamedAndRemoveUntil(
                             recommendationPage,
                             arguments: isDiabetes

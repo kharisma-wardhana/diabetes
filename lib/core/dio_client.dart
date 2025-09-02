@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../data/model/user/user.dart';
@@ -43,16 +44,18 @@ class DioClient {
                 options.headers['Authorization'] = '${user.token}';
               }
             }
-            print(
-              '\n'
-              'Request ${options.method} ${options.uri} \n'
-              '-- headers --\n'
-              '${options.headers.toString()} \n'
-              '-- body --\n'
-              '${options.data} \n'
-              '-- queryParam -- \n'
-              '${options.queryParameters}',
-            );
+            if (kDebugMode) {
+              print(
+                '\n'
+                'Request ${options.method} ${options.uri} \n'
+                '-- headers --\n'
+                '${options.headers.toString()} \n'
+                '-- body --\n'
+                '${options.data} \n'
+                '-- queryParam -- \n'
+                '${options.queryParameters}',
+              );
+            }
             return handler.next(options); //continue
             // If you want to resolve the request with some custom data，
             // you can return a `Response` object or return `dio.resolve(data)`.
@@ -62,24 +65,30 @@ class DioClient {
       onResponse: (Response response, ResponseInterceptorHandler handler) {
         // Do something with response data
         if (response.statusCode == 200) {
-          print(
-            '\n'
-            'Response ${response.requestOptions.uri} \n'
-            '-- headers --\n'
-            '${response.headers.toString()} \n'
-            '-- payload --\n'
-            '${jsonEncode(response.data)} \n'
-            '',
-          );
+          if (kDebugMode) {
+            print(
+              '\n'
+              'Response ${response.requestOptions.uri} \n'
+              '-- headers --\n'
+              '${response.headers.toString()} \n'
+              '-- payload --\n'
+              '${jsonEncode(response.data)} \n'
+              '',
+            );
+          }
         } else {
-          print('Dio Response Status --> ${response.statusCode}');
+          if (kDebugMode) {
+            print('Dio Response Status --> ${response.statusCode}');
+          }
         }
         return handler.next(response); // continue
       },
       onError: (DioException e, ErrorInterceptorHandler handler) {
-        // Do something with response error
-        print('Dio Response Error --> $e');
-        print('Response --> ${e.response?.data}');
+        if (kDebugMode) {
+          // Do something with response error
+          print('Dio Response Error --> $e');
+          print('Response --> ${e.response?.data}');
+        }
         return handler.next(e); //continue
       },
     );

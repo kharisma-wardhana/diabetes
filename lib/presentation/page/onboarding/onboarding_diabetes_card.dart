@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../gen/assets.gen.dart';
 import '../../../gen/colors.gen.dart';
 import '../../widget/custom_button.dart';
 
@@ -46,6 +45,7 @@ class OnboardDiabetesCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35.sp),
               ),
+              Divider(),
               Text(data, style: TextStyle(fontSize: 30.sp)),
             ],
           ),
@@ -58,14 +58,13 @@ class OnboardDiabetesCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: Image.asset(Assets.images.border.path, fit: BoxFit.fill),
-        ),
-        SizedBox(height: 64.h),
+        const Spacer(),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset(image, fit: BoxFit.contain),
+          child: SizedBox(
+            height: 200.h,
+            child: Image.asset(image, fit: BoxFit.contain),
+          ),
         ),
         const Spacer(),
         Text(

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- int get id; String get name; String get mobile; String get email; String get gender; String get dob; String? get token; bool? get isOnboardingComplete; bool? get isAntropometriComplete;
+ int get id; String get name; String get mobile; String get email; String get gender; String get dob; int? get age; int? get typeDiabetes; String? get token; bool? get isOnboardingComplete; bool? get isAntropometriComplete;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.email, email) || other.email == email)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.token, token) || other.token == token)&&(identical(other.isOnboardingComplete, isOnboardingComplete) || other.isOnboardingComplete == isOnboardingComplete)&&(identical(other.isAntropometriComplete, isAntropometriComplete) || other.isAntropometriComplete == isAntropometriComplete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.email, email) || other.email == email)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.age, age) || other.age == age)&&(identical(other.typeDiabetes, typeDiabetes) || other.typeDiabetes == typeDiabetes)&&(identical(other.token, token) || other.token == token)&&(identical(other.isOnboardingComplete, isOnboardingComplete) || other.isOnboardingComplete == isOnboardingComplete)&&(identical(other.isAntropometriComplete, isAntropometriComplete) || other.isAntropometriComplete == isAntropometriComplete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,mobile,email,gender,dob,token,isOnboardingComplete,isAntropometriComplete);
+int get hashCode => Object.hash(runtimeType,id,name,mobile,email,gender,dob,age,typeDiabetes,token,isOnboardingComplete,isAntropometriComplete);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, mobile: $mobile, email: $email, gender: $gender, dob: $dob, token: $token, isOnboardingComplete: $isOnboardingComplete, isAntropometriComplete: $isAntropometriComplete)';
+  return 'User(id: $id, name: $name, mobile: $mobile, email: $email, gender: $gender, dob: $dob, age: $age, typeDiabetes: $typeDiabetes, token: $token, isOnboardingComplete: $isOnboardingComplete, isAntropometriComplete: $isAntropometriComplete)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String mobile, String email, String gender, String dob, String? token, bool? isOnboardingComplete, bool? isAntropometriComplete
+ int id, String name, String mobile, String email, String gender, String dob, int? age, int? typeDiabetes, String? token, bool? isOnboardingComplete, bool? isAntropometriComplete
 });
 
 
@@ -65,7 +65,7 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? mobile = null,Object? email = null,Object? gender = null,Object? dob = null,Object? token = freezed,Object? isOnboardingComplete = freezed,Object? isAntropometriComplete = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? mobile = null,Object? email = null,Object? gender = null,Object? dob = null,Object? age = freezed,Object? typeDiabetes = freezed,Object? token = freezed,Object? isOnboardingComplete = freezed,Object? isAntropometriComplete = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,9 @@ as String,mobile: null == mobile ? _self.mobile : mobile // ignore: cast_nullabl
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as String,dob: null == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
-as String,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int?,typeDiabetes: freezed == typeDiabetes ? _self.typeDiabetes : typeDiabetes // ignore: cast_nullable_to_non_nullable
+as int?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,isOnboardingComplete: freezed == isOnboardingComplete ? _self.isOnboardingComplete : isOnboardingComplete // ignore: cast_nullable_to_non_nullable
 as bool?,isAntropometriComplete: freezed == isAntropometriComplete ? _self.isAntropometriComplete : isAntropometriComplete // ignore: cast_nullable_to_non_nullable
 as bool?,
@@ -161,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  int? age,  int? typeDiabetes,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
+return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.age,_that.typeDiabetes,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
   return orElse();
 
 }
@@ -182,10 +184,10 @@ return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  int? age,  int? typeDiabetes,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
+return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.age,_that.typeDiabetes,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +204,10 @@ return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String mobile,  String email,  String gender,  String dob,  int? age,  int? typeDiabetes,  String? token,  bool? isOnboardingComplete,  bool? isAntropometriComplete)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
+return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.dob,_that.age,_that.typeDiabetes,_that.token,_that.isOnboardingComplete,_that.isAntropometriComplete);case _:
   return null;
 
 }
@@ -217,7 +219,7 @@ return $default(_that.id,_that.name,_that.mobile,_that.email,_that.gender,_that.
 @JsonSerializable()
 
 class _User extends User {
-  const _User({required this.id, required this.name, required this.mobile, required this.email, required this.gender, required this.dob, this.token, this.isOnboardingComplete, this.isAntropometriComplete}): super._();
+  const _User({required this.id, required this.name, required this.mobile, required this.email, required this.gender, required this.dob, this.age, this.typeDiabetes, this.token, this.isOnboardingComplete, this.isAntropometriComplete}): super._();
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override final  int id;
@@ -226,6 +228,8 @@ class _User extends User {
 @override final  String email;
 @override final  String gender;
 @override final  String dob;
+@override final  int? age;
+@override final  int? typeDiabetes;
 @override final  String? token;
 @override final  bool? isOnboardingComplete;
 @override final  bool? isAntropometriComplete;
@@ -243,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.email, email) || other.email == email)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.token, token) || other.token == token)&&(identical(other.isOnboardingComplete, isOnboardingComplete) || other.isOnboardingComplete == isOnboardingComplete)&&(identical(other.isAntropometriComplete, isAntropometriComplete) || other.isAntropometriComplete == isAntropometriComplete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.email, email) || other.email == email)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.age, age) || other.age == age)&&(identical(other.typeDiabetes, typeDiabetes) || other.typeDiabetes == typeDiabetes)&&(identical(other.token, token) || other.token == token)&&(identical(other.isOnboardingComplete, isOnboardingComplete) || other.isOnboardingComplete == isOnboardingComplete)&&(identical(other.isAntropometriComplete, isAntropometriComplete) || other.isAntropometriComplete == isAntropometriComplete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,mobile,email,gender,dob,token,isOnboardingComplete,isAntropometriComplete);
+int get hashCode => Object.hash(runtimeType,id,name,mobile,email,gender,dob,age,typeDiabetes,token,isOnboardingComplete,isAntropometriComplete);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, mobile: $mobile, email: $email, gender: $gender, dob: $dob, token: $token, isOnboardingComplete: $isOnboardingComplete, isAntropometriComplete: $isAntropometriComplete)';
+  return 'User(id: $id, name: $name, mobile: $mobile, email: $email, gender: $gender, dob: $dob, age: $age, typeDiabetes: $typeDiabetes, token: $token, isOnboardingComplete: $isOnboardingComplete, isAntropometriComplete: $isAntropometriComplete)';
 }
 
 
@@ -263,7 +267,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String mobile, String email, String gender, String dob, String? token, bool? isOnboardingComplete, bool? isAntropometriComplete
+ int id, String name, String mobile, String email, String gender, String dob, int? age, int? typeDiabetes, String? token, bool? isOnboardingComplete, bool? isAntropometriComplete
 });
 
 
@@ -280,7 +284,7 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? mobile = null,Object? email = null,Object? gender = null,Object? dob = null,Object? token = freezed,Object? isOnboardingComplete = freezed,Object? isAntropometriComplete = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? mobile = null,Object? email = null,Object? gender = null,Object? dob = null,Object? age = freezed,Object? typeDiabetes = freezed,Object? token = freezed,Object? isOnboardingComplete = freezed,Object? isAntropometriComplete = freezed,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -288,7 +292,9 @@ as String,mobile: null == mobile ? _self.mobile : mobile // ignore: cast_nullabl
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
 as String,dob: null == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
-as String,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int?,typeDiabetes: freezed == typeDiabetes ? _self.typeDiabetes : typeDiabetes // ignore: cast_nullable_to_non_nullable
+as int?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,isOnboardingComplete: freezed == isOnboardingComplete ? _self.isOnboardingComplete : isOnboardingComplete // ignore: cast_nullable_to_non_nullable
 as bool?,isAntropometriComplete: freezed == isAntropometriComplete ? _self.isAntropometriComplete : isAntropometriComplete // ignore: cast_nullable_to_non_nullable
 as bool?,

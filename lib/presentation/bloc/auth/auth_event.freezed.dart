@@ -55,7 +55,7 @@ extension AuthEventPatterns on AuthEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RegisterEvent value)?  register,TResult Function( LoginEvent value)?  login,TResult Function( LogoutEvent value)?  logout,TResult Function( AppStarted value)?  appStarted,TResult Function( CompleteOnboardingEvent value)?  completeOnboarding,TResult Function( CompleteAntropometriEvent value)?  completeAntropometri,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RegisterEvent value)?  register,TResult Function( LoginEvent value)?  login,TResult Function( LogoutEvent value)?  logout,TResult Function( AppStarted value)?  appStarted,TResult Function( CompleteOnboardingEvent value)?  completeOnboarding,TResult Function( CompleteAntropometriEvent value)?  completeAntropometri,TResult Function( UpdateTypeDiabetesEvent value)?  updateTypeDiabetes,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RegisterEvent() when register != null:
@@ -64,7 +64,8 @@ return login(_that);case LogoutEvent() when logout != null:
 return logout(_that);case AppStarted() when appStarted != null:
 return appStarted(_that);case CompleteOnboardingEvent() when completeOnboarding != null:
 return completeOnboarding(_that);case CompleteAntropometriEvent() when completeAntropometri != null:
-return completeAntropometri(_that);case _:
+return completeAntropometri(_that);case UpdateTypeDiabetesEvent() when updateTypeDiabetes != null:
+return updateTypeDiabetes(_that);case _:
   return orElse();
 
 }
@@ -82,7 +83,7 @@ return completeAntropometri(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RegisterEvent value)  register,required TResult Function( LoginEvent value)  login,required TResult Function( LogoutEvent value)  logout,required TResult Function( AppStarted value)  appStarted,required TResult Function( CompleteOnboardingEvent value)  completeOnboarding,required TResult Function( CompleteAntropometriEvent value)  completeAntropometri,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RegisterEvent value)  register,required TResult Function( LoginEvent value)  login,required TResult Function( LogoutEvent value)  logout,required TResult Function( AppStarted value)  appStarted,required TResult Function( CompleteOnboardingEvent value)  completeOnboarding,required TResult Function( CompleteAntropometriEvent value)  completeAntropometri,required TResult Function( UpdateTypeDiabetesEvent value)  updateTypeDiabetes,}){
 final _that = this;
 switch (_that) {
 case RegisterEvent():
@@ -91,7 +92,8 @@ return login(_that);case LogoutEvent():
 return logout(_that);case AppStarted():
 return appStarted(_that);case CompleteOnboardingEvent():
 return completeOnboarding(_that);case CompleteAntropometriEvent():
-return completeAntropometri(_that);case _:
+return completeAntropometri(_that);case UpdateTypeDiabetesEvent():
+return updateTypeDiabetes(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -108,7 +110,7 @@ return completeAntropometri(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RegisterEvent value)?  register,TResult? Function( LoginEvent value)?  login,TResult? Function( LogoutEvent value)?  logout,TResult? Function( AppStarted value)?  appStarted,TResult? Function( CompleteOnboardingEvent value)?  completeOnboarding,TResult? Function( CompleteAntropometriEvent value)?  completeAntropometri,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RegisterEvent value)?  register,TResult? Function( LoginEvent value)?  login,TResult? Function( LogoutEvent value)?  logout,TResult? Function( AppStarted value)?  appStarted,TResult? Function( CompleteOnboardingEvent value)?  completeOnboarding,TResult? Function( CompleteAntropometriEvent value)?  completeAntropometri,TResult? Function( UpdateTypeDiabetesEvent value)?  updateTypeDiabetes,}){
 final _that = this;
 switch (_that) {
 case RegisterEvent() when register != null:
@@ -117,7 +119,8 @@ return login(_that);case LogoutEvent() when logout != null:
 return logout(_that);case AppStarted() when appStarted != null:
 return appStarted(_that);case CompleteOnboardingEvent() when completeOnboarding != null:
 return completeOnboarding(_that);case CompleteAntropometriEvent() when completeAntropometri != null:
-return completeAntropometri(_that);case _:
+return completeAntropometri(_that);case UpdateTypeDiabetesEvent() when updateTypeDiabetes != null:
+return updateTypeDiabetes(_that);case _:
   return null;
 
 }
@@ -134,7 +137,7 @@ return completeAntropometri(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String name,  String email,  String mobile,  String dob,  String gender)?  register,TResult Function( String username,  String password)?  login,TResult Function()?  logout,TResult Function()?  appStarted,TResult Function()?  completeOnboarding,TResult Function()?  completeAntropometri,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String name,  String email,  String mobile,  String dob,  String gender)?  register,TResult Function( String username,  String password)?  login,TResult Function()?  logout,TResult Function()?  appStarted,TResult Function()?  completeOnboarding,TResult Function()?  completeAntropometri,TResult Function( int typeDiabetes)?  updateTypeDiabetes,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RegisterEvent() when register != null:
 return register(_that.name,_that.email,_that.mobile,_that.dob,_that.gender);case LoginEvent() when login != null:
@@ -142,7 +145,8 @@ return login(_that.username,_that.password);case LogoutEvent() when logout != nu
 return logout();case AppStarted() when appStarted != null:
 return appStarted();case CompleteOnboardingEvent() when completeOnboarding != null:
 return completeOnboarding();case CompleteAntropometriEvent() when completeAntropometri != null:
-return completeAntropometri();case _:
+return completeAntropometri();case UpdateTypeDiabetesEvent() when updateTypeDiabetes != null:
+return updateTypeDiabetes(_that.typeDiabetes);case _:
   return orElse();
 
 }
@@ -160,7 +164,7 @@ return completeAntropometri();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String name,  String email,  String mobile,  String dob,  String gender)  register,required TResult Function( String username,  String password)  login,required TResult Function()  logout,required TResult Function()  appStarted,required TResult Function()  completeOnboarding,required TResult Function()  completeAntropometri,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String name,  String email,  String mobile,  String dob,  String gender)  register,required TResult Function( String username,  String password)  login,required TResult Function()  logout,required TResult Function()  appStarted,required TResult Function()  completeOnboarding,required TResult Function()  completeAntropometri,required TResult Function( int typeDiabetes)  updateTypeDiabetes,}) {final _that = this;
 switch (_that) {
 case RegisterEvent():
 return register(_that.name,_that.email,_that.mobile,_that.dob,_that.gender);case LoginEvent():
@@ -168,7 +172,8 @@ return login(_that.username,_that.password);case LogoutEvent():
 return logout();case AppStarted():
 return appStarted();case CompleteOnboardingEvent():
 return completeOnboarding();case CompleteAntropometriEvent():
-return completeAntropometri();case _:
+return completeAntropometri();case UpdateTypeDiabetesEvent():
+return updateTypeDiabetes(_that.typeDiabetes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -185,7 +190,7 @@ return completeAntropometri();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String name,  String email,  String mobile,  String dob,  String gender)?  register,TResult? Function( String username,  String password)?  login,TResult? Function()?  logout,TResult? Function()?  appStarted,TResult? Function()?  completeOnboarding,TResult? Function()?  completeAntropometri,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String name,  String email,  String mobile,  String dob,  String gender)?  register,TResult? Function( String username,  String password)?  login,TResult? Function()?  logout,TResult? Function()?  appStarted,TResult? Function()?  completeOnboarding,TResult? Function()?  completeAntropometri,TResult? Function( int typeDiabetes)?  updateTypeDiabetes,}) {final _that = this;
 switch (_that) {
 case RegisterEvent() when register != null:
 return register(_that.name,_that.email,_that.mobile,_that.dob,_that.gender);case LoginEvent() when login != null:
@@ -193,7 +198,8 @@ return login(_that.username,_that.password);case LogoutEvent() when logout != nu
 return logout();case AppStarted() when appStarted != null:
 return appStarted();case CompleteOnboardingEvent() when completeOnboarding != null:
 return completeOnboarding();case CompleteAntropometriEvent() when completeAntropometri != null:
-return completeAntropometri();case _:
+return completeAntropometri();case UpdateTypeDiabetesEvent() when updateTypeDiabetes != null:
+return updateTypeDiabetes(_that.typeDiabetes);case _:
   return null;
 
 }
@@ -470,5 +476,71 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class UpdateTypeDiabetesEvent implements AuthEvent {
+  const UpdateTypeDiabetesEvent(this.typeDiabetes);
+  
+
+ final  int typeDiabetes;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UpdateTypeDiabetesEventCopyWith<UpdateTypeDiabetesEvent> get copyWith => _$UpdateTypeDiabetesEventCopyWithImpl<UpdateTypeDiabetesEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTypeDiabetesEvent&&(identical(other.typeDiabetes, typeDiabetes) || other.typeDiabetes == typeDiabetes));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,typeDiabetes);
+
+@override
+String toString() {
+  return 'AuthEvent.updateTypeDiabetes(typeDiabetes: $typeDiabetes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UpdateTypeDiabetesEventCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory $UpdateTypeDiabetesEventCopyWith(UpdateTypeDiabetesEvent value, $Res Function(UpdateTypeDiabetesEvent) _then) = _$UpdateTypeDiabetesEventCopyWithImpl;
+@useResult
+$Res call({
+ int typeDiabetes
+});
+
+
+
+
+}
+/// @nodoc
+class _$UpdateTypeDiabetesEventCopyWithImpl<$Res>
+    implements $UpdateTypeDiabetesEventCopyWith<$Res> {
+  _$UpdateTypeDiabetesEventCopyWithImpl(this._self, this._then);
+
+  final UpdateTypeDiabetesEvent _self;
+  final $Res Function(UpdateTypeDiabetesEvent) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? typeDiabetes = null,}) {
+  return _then(UpdateTypeDiabetesEvent(
+null == typeDiabetes ? _self.typeDiabetes : typeDiabetes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
 
 // dart format on

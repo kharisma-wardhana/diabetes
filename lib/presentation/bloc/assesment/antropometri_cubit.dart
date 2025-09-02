@@ -80,7 +80,8 @@ class AntropometriCubit extends Cubit<BaseState<AntropometriEntity>> {
 
   double calculateBMI(double height, double weight) {
     if (height <= 0 || weight <= 0) return 0;
-    return weight / (height * 0.02);
+    final heightInMeters = height / 100;
+    return weight / (heightInMeters * heightInMeters);
   }
 
   String getBMIStatus(double bmi) {

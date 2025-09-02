@@ -9,7 +9,9 @@ import '../entity/assesment/assesment_entity.dart';
 import '../entity/assesment/ginjal_entity.dart';
 import '../entity/assesment/gula_darah/gula_darah_entity.dart';
 import '../entity/assesment/hb1ac_entity.dart';
+import '../entity/assesment/kalori/kalori_entity.dart';
 import '../entity/assesment/kolesterol_entity.dart';
+import '../entity/assesment/obat_entity.dart';
 import '../entity/assesment/tensi_entity.dart';
 import '../entity/assesment/water_entity.dart';
 
@@ -99,5 +101,23 @@ abstract class AssesmentRepository {
 
   Future<Either<Failure, List<GinjalEntity>>> addGinjal(
     AddParams<GinjalEntity> params,
+  );
+
+  Future<Either<Failure, List<ObatEntity>>> getAllMedicine(SearchParams params);
+
+  Future<Either<Failure, List<ObatEntity>>> addMedicine(
+    AddParams<ObatEntity> params,
+  );
+
+  Future<Either<Failure, List<ObatEntity>>> updateStatusMedicine(
+    UpdateParams<int> params,
+  );
+
+  Future<Either<Failure, List<KaloriEntity>>> getAllNutrition(
+    SearchParams params,
+  );
+
+  Future<Either<Failure, List<KaloriEntity>>> addNutrition(
+    AddParams<KaloriEntity> params,
   );
 }

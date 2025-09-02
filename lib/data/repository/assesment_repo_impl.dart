@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:diabetes/domain/entity/assesment/obat_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/constant.dart';
@@ -11,19 +12,26 @@ import '../../domain/entity/assesment/assesment_entity.dart';
 import '../../domain/entity/assesment/ginjal_entity.dart';
 import '../../domain/entity/assesment/gula_darah/gula_darah_entity.dart';
 import '../../domain/entity/assesment/hb1ac_entity.dart';
+import '../../domain/entity/assesment/kalori/kalori_entity.dart';
 import '../../domain/entity/assesment/kolesterol_entity.dart';
 import '../../domain/entity/assesment/tensi_entity.dart';
 import '../../domain/entity/assesment/water_entity.dart';
 import '../../domain/repository/assesment_repo.dart';
 import '../datasource/remote/assesment_remote_datasource.dart';
+import '../datasource/remote/medicine_remote_datasource.dart';
+import '../datasource/remote/nutrition_remote_datasource.dart';
 
 class AssesmentRepositoryImpl extends AssesmentRepository {
-  final AssesmentRemoteDatasource remoteDatasource;
   final FlutterSecureStorage secureStorage;
+  final AssesmentRemoteDatasource remoteDatasource;
+  final NutritionRemoteDatasource nutritionRemoteDataSource;
+  final MedicineRemoteDatasource medicineRemoteDataSource;
 
   AssesmentRepositoryImpl({
     required this.remoteDatasource,
     required this.secureStorage,
+    required this.nutritionRemoteDataSource,
+    required this.medicineRemoteDataSource,
   });
 
   Future<int> getUserID() async {
@@ -465,6 +473,97 @@ class AssesmentRepositoryImpl extends AssesmentRepository {
         userID,
         '${datetime.month}',
         '${datetime.year}',
+      );
+      return Right(data.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<KaloriEntity>>> getAllNutrition(
+    SearchParams params,
+  ) async {
+    try {
+      final userID = await getUserID();
+      final data = await nutritionRemoteDataSource.getAllNutrition(
+        userID,
+        params.date,
+      );
+      return Right(data.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<KaloriEntity>>> addNutrition(
+    AddParams<KaloriEntity> params,
+  ) async {
+    try {
+      final userID = await getUserID();
+      final data = await nutritionRemoteDataSource.addNutrition(
+        userID,
+        params.data,
+      );
+      return Right(data.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ObatEntity>>> addMedicine(
+    AddParams<ObatEntity> params,
+  ) async {
+    try {
+      final userID = await getUserID();
+      final data = await medicineRemoteDataSource.addMedicine(
+        userID,
+        params.data,
+      );
+      return Right(data.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ObatEntity>>> getAllMedicine(
+    SearchParams params,
+  ) async {
+    try {
+      final userID = await getUserID();
+      final data = await medicineRemoteDataSource.getAllMedicine(
+        userID,
+        params.date,
+      );
+      return Right(data.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ObatEntity>>> updateStatusMedicine(
+    UpdateParams<int> params,
+  ) async {
+    try {
+      final userID = await getUserID();
+      final data = await medicineRemoteDataSource.updateStatusMedicine(
+        userID,
+        params.dataId,
+        params.data,
       );
       return Right(data.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {

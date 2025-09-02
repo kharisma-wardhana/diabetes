@@ -14,41 +14,14 @@ class SplashPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 300.w, // Responsive width
-                    child: Image.asset(
-                      Assets.images.logoKemenkes.path,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 300.h, // Responsive height
-                    child: Image.asset(
-                      Assets.images.logo.path,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 100.h, // Responsive height
-                    child: Image.asset(
-                      Assets.images.logoElan.path,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 300.w, // Responsive width
+              child: Image.asset(
+                Assets.images.elanIcon.path,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),

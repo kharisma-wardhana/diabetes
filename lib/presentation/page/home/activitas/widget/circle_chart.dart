@@ -34,13 +34,18 @@ class CircleChart extends StatelessWidget {
             children: [
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
               ),
               Text(
                 '$currentValue',
                 style: TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
               ),
-              Text(unit, style: TextStyle(fontSize: 16.sp)),
+              Text(
+                unit,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.sp),
+              ),
             ],
           ),
         ],

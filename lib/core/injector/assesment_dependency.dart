@@ -1,7 +1,8 @@
-import 'package:diabetes/presentation/bloc/assesment/asam_urat_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../data/datasource/remote/assesment_remote_datasource.dart';
+import '../../data/datasource/remote/medicine_remote_datasource.dart';
+import '../../data/datasource/remote/nutrition_remote_datasource.dart';
 import '../../data/repository/assesment_repo_impl.dart';
 import '../../domain/repository/assesment_repo.dart';
 import '../../domain/usecase/assesment/add_asam_urat_usecase.dart';
@@ -21,12 +22,17 @@ import '../../domain/usecase/assesment/get_list_ginjal_usecase.dart';
 import '../../domain/usecase/assesment/get_list_hb_usecase.dart';
 import '../../domain/usecase/assesment/get_list_kolesterol_usecase.dart';
 import '../../domain/usecase/assesment/get_list_water_usecase.dart';
+import '../../domain/usecase/medicine/add_medicine_usecase.dart';
+import '../../domain/usecase/medicine/get_list_medicine_usecase.dart';
+import '../../domain/usecase/medicine/update_status_medicine_usecase.dart';
 import '../../presentation/bloc/assesment/antropometri_cubit.dart';
+import '../../presentation/bloc/assesment/asam_urat_cubit.dart';
 import '../../presentation/bloc/assesment/assesment_cubit.dart';
 import '../../presentation/bloc/assesment/ginjal_cubit.dart';
 import '../../presentation/bloc/assesment/gula_cubit.dart';
 import '../../presentation/bloc/assesment/hb1ac_cubit.dart';
 import '../../presentation/bloc/assesment/kolesterol_cubit.dart';
+import '../../presentation/bloc/assesment/obat_cubit.dart';
 import '../../presentation/bloc/assesment/tensi_cubit.dart';
 import '../../presentation/bloc/assesment/water_cubit.dart';
 import '../api_service.dart';
@@ -44,13 +50,22 @@ class AssesmentDependency {
     sl.registerLazySingleton<AssesmentRemoteDatasource>(
       () => AssesmentRemoteDatasourceImpl(apiService: sl<ApiService>()),
     );
+
+    sl.registerLazySingleton<NutritionRemoteDatasource>(
+      () => NutritionRemoteDatasourceImpl(apiService: sl<ApiService>()),
+    );
+    sl.registerLazySingleton<MedicineRemoteDatasource>(
+      () => MedicineRemoteDatasourceImpl(apiService: sl<ApiService>()),
+    );
   }
 
   void _registerRepository() {
     sl.registerLazySingleton<AssesmentRepository>(
       () => AssesmentRepositoryImpl(
-        remoteDatasource: sl<AssesmentRemoteDatasource>(),
         secureStorage: sl<FlutterSecureStorage>(),
+        remoteDatasource: sl<AssesmentRemoteDatasource>(),
+        nutritionRemoteDataSource: sl<NutritionRemoteDatasource>(),
+        medicineRemoteDataSource: sl<MedicineRemoteDatasource>(),
       ),
     );
   }
@@ -108,6 +123,15 @@ class AssesmentDependency {
     sl.registerLazySingleton(
       () => AddBloodPressureUseCase(assesmentRepo: sl<AssesmentRepository>()),
     );
+    sl.registerLazySingleton(
+      () => GetListMedicineUseCase(repository: sl<AssesmentRepository>()),
+    );
+    sl.registerLazySingleton(
+      () => AddMedicineUseCase(repository: sl<AssesmentRepository>()),
+    );
+    sl.registerLazySingleton(
+      () => UpdateStatusMedicineUseCase(repository: sl<AssesmentRepository>()),
+    );
   }
 
   void _registerCubit() {
@@ -161,6 +185,13 @@ class AssesmentDependency {
       () => TensiCubit(
         getListTekananDarahUseCase: sl<GetListBloodPressureUseCase>(),
         addBloodPressureUseCase: sl<AddBloodPressureUseCase>(),
+      ),
+    );
+    sl.registerLazySingleton(
+      () => ObatCubit(
+        addMedicineUseCase: sl<AddMedicineUseCase>(),
+        getListMedicineUseCase: sl<GetListMedicineUseCase>(),
+        updateStatusMedicineUseCase: sl<UpdateStatusMedicineUseCase>(),
       ),
     );
   }

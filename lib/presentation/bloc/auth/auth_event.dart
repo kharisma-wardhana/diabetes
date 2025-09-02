@@ -24,4 +24,7 @@ abstract class AuthEvent with _$AuthEvent {
   const factory AuthEvent.completeOnboarding() = CompleteOnboardingEvent;
 
   const factory AuthEvent.completeAntropometri() = CompleteAntropometriEvent;
+
+  const factory AuthEvent.updateTypeDiabetes(int typeDiabetes) =
+      UpdateTypeDiabetesEvent;
 }

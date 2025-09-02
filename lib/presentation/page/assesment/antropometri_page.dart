@@ -23,10 +23,8 @@ class AntropometriPage extends StatefulWidget {
 class _AntropometriPageState extends State<AntropometriPage> {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
-  final TextEditingController stomachController = TextEditingController(
-    text: '0',
-  );
-  final TextEditingController handController = TextEditingController(text: '0');
+  final TextEditingController stomachController = TextEditingController();
+  final TextEditingController handController = TextEditingController();
   final TextEditingController jenisAktivitasController = TextEditingController(
     text: 'Sangat jarang berolahraga (1-3 kali per bulan)',
   );

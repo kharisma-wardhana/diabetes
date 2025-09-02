@@ -10,6 +10,7 @@ import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
 import '../../../widget/custom_button.dart';
+import '../../../widget/custom_dropdown.dart';
 import '../../../widget/custom_loading.dart';
 import '../../../widget/custom_text_field.dart';
 
@@ -21,7 +22,9 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  TextEditingController activityController = TextEditingController();
+  TextEditingController activityController = TextEditingController(
+    text: 'Berjalan Kaki',
+  );
   TextEditingController activityLainController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isActivityLainSelected = false;
@@ -46,7 +49,11 @@ class _ActivityPageState extends State<ActivityPage> {
     if (_formKey.currentState!.validate()) {
       // Logic to handle activity input
       context.read<ActivityBloc>().add(
-        RegisterActivityPlan(planType: activityController.text, planData: {}),
+        RegisterActivityPlan(
+          activityName: isActivityLainSelected
+              ? activityLainController.text
+              : activityController.text,
+        ),
       );
     }
   }
@@ -54,7 +61,7 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ELAN')),
+      appBar: AppBar(title: const Text('Aktivitas')),
       body: SafeArea(
         child: Stack(
           children: [
@@ -63,7 +70,6 @@ class _ActivityPageState extends State<ActivityPage> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -74,11 +80,10 @@ class _ActivityPageState extends State<ActivityPage> {
                       ),
                     ),
                     16.verticalSpace,
-                    DropdownMenu(
-                      width: double.infinity,
-                      dropdownMenuEntries: activityOptions,
-                      initialSelection: activityOptions.first,
-                      onSelected: (value) {
+                    CustomDropdown(
+                      controller: activityController,
+                      items: activityOptions,
+                      onChanged: (value) {
                         // Handle dropdown selection
                         setState(() {
                           isActivityLainSelected = value == 'Lainnya';
@@ -87,8 +92,6 @@ class _ActivityPageState extends State<ActivityPage> {
                           }
                         });
                       },
-                      hintText: 'Pilih Aktivitas',
-                      controller: activityController,
                     ),
                     16.verticalSpace,
                     isActivityLainSelected
@@ -101,7 +104,7 @@ class _ActivityPageState extends State<ActivityPage> {
                             controller: activityLainController,
                           )
                         : SizedBox.shrink(),
-                    32.verticalSpace,
+                    Spacer(),
                     BlocListener<ActivityBloc, ActivityState>(
                       listener: (context, state) {
                         if (mounted) {
@@ -109,7 +112,7 @@ class _ActivityPageState extends State<ActivityPage> {
                             isLoading = state.isLoading;
                           });
                         }
-                        if (state.isPlanRegistered || state.isPlanUpdated) {
+                        if (state.isSuccess) {
                           sl<AppNavigator>().pushNamedAndRemoveUntil(homePage);
                         } else if (state.isError) {
                           Fluttertoast.showToast(

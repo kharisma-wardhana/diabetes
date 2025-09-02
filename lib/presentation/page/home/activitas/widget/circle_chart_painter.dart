@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:diabetes/gen/colors.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,7 +11,7 @@ class CircleChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double strokeWidth = 24.w;
+    double strokeWidth = 25.w;
     Offset center = Offset(size.width / 2, size.height / 2);
     double radius = (size.width - strokeWidth) / 2;
 
@@ -20,7 +21,7 @@ class CircleChartPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final progressPaint = Paint()
-      ..color = Colors.blue
+      ..color = ColorName.primary
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class CustomDropdown extends StatelessWidget {
   final TextEditingController controller;
@@ -15,17 +16,28 @@ class CustomDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DropdownButtonFormField(
+        DropdownButtonFormField2(
           isExpanded: true,
           isDense: false,
           value: controller.text,
+          barrierColor: Colors.black.withValues(alpha: 0.7),
           items: items.asMap().entries.map((e) {
             return DropdownMenuItem(
               value: e.value,
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8),
-                child: Text(e.value),
+                width: double.infinity,
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        e.value,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }).toList(),
