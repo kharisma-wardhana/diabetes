@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/app_navigator.dart';
 import '../../../../core/base_state.dart';
@@ -66,22 +67,48 @@ class _InfoPageState extends State<InfoPage> {
                       BlocConsumer<AssesmentCubit, BaseState<AssesmentEntity>>(
                         builder: (context, state) {
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.r),
                             child: Container(
                               width: double.infinity,
                               height: 80.h,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: ColorName.primary),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "CHECK KESEHATAN",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorName.primary,
-                                  ),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(
+                                  color: ColorName.primary,
+                                  width: 2,
                                 ),
+                                boxShadow: List.of([
+                                  BoxShadow(
+                                    color: Colors.white12.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(
+                                      0,
+                                      3,
+                                    ), // changes position of shadow
+                                  ),
+                                ]),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Image.asset(
+                                    Assets.images.cekKesehatan.path,
+                                    height: 60.h,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  Text(
+                                    "CHECK KESEHATAN",
+                                    style: GoogleFonts.notoSans(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25.sp,
+                                      color: ColorName.primary,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

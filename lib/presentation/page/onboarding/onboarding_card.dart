@@ -36,9 +36,19 @@ class OnboardingCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  height: 300.h,
+                  height: 250.h,
                   child: Image.asset(
                     Assets.images.logo.path,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 200.h,
+                  child: Image.asset(
+                    Assets.images.logoElan.path,
                     fit: BoxFit.contain,
                   ),
                 ),

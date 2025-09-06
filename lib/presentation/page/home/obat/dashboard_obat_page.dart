@@ -51,6 +51,44 @@ class _DashboardObatPageState extends State<DashboardObatPage>
     );
   }
 
+  Widget _buttonHandler(ObatEntity obat) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                context.read<ObatCubit>().updateStatusMedicine(obat.id!, 0);
+              },
+              icon: const Icon(
+                Icons.close_rounded,
+                color: Colors.red,
+                size: 45,
+              ),
+            ),
+            const Text('Lupa'),
+          ],
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                context.read<ObatCubit>().updateStatusMedicine(obat.id!, 1);
+              },
+              icon: const Icon(
+                Icons.check_circle_outline_rounded,
+                color: ColorName.primary,
+                size: 45,
+              ),
+            ),
+            const Text('Sudah'),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -86,7 +124,8 @@ class _DashboardObatPageState extends State<DashboardObatPage>
             _animation = Tween<double>(begin: 0, end: targetPercent).animate(
               CurvedAnimation(parent: _controller, curve: Curves.easeOut),
             );
-            return CustomScrollable(
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   20.verticalSpace,
@@ -114,9 +153,9 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                       );
                     },
                   ),
-                  24.verticalSpace,
+                  16.verticalSpace,
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(horizontal: 16.r),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -128,67 +167,66 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                           ),
                         ),
                         8.verticalSpace,
-                        ...obatList.map((obat) {
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 12.h),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: .1),
-                                  blurRadius: 4.r,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(16.r),
-                              color: Colors.grey[350],
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  obat.name,
-                                  style: GoogleFonts.poppins(fontSize: 16.sp),
-                                ),
-                                Text(
-                                  obat.dosis,
-                                  style: GoogleFonts.poppins(fontSize: 16.sp),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        context
-                                            .read<ObatCubit>()
-                                            .updateStatusMedicine(obat.id!, 0);
-                                      },
-                                      icon: const Icon(
-                                        Icons.close_rounded,
-                                        color: Colors.red,
-                                        size: 45,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        context
-                                            .read<ObatCubit>()
-                                            .updateStatusMedicine(obat.id!, 1);
-                                      },
-                                      icon: const Icon(
-                                        Icons.check_circle_outline_rounded,
-                                        color: ColorName.primary,
-                                        size: 45,
-                                      ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: obatList.length > 1
+                                ? 300
+                                      .h // Limit height if more than 4 items
+                                : double.infinity,
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: obatList.length > 4
+                                ? const AlwaysScrollableScrollPhysics()
+                                : const NeverScrollableScrollPhysics(),
+                            itemCount: obatList.length,
+                            itemBuilder: (context, index) {
+                              final obat = obatList[index];
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 8.h),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: .1),
+                                      blurRadius: 4.r,
+                                      offset: Offset(0, 2),
                                     ),
                                   ],
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  color: Colors.blueGrey[150],
                                 ),
-                              ],
-                            ),
-                          );
-                        }),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.w),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        obat.name,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                      4.verticalSpace,
+                                      Text(
+                                        obat.dosis,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                      8.verticalSpace,
+                                      _buttonHandler(obat),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
+                  16.verticalSpace,
+                  // Add bottom padding to ensure last item is visible
+                  SizedBox(height: 80.h),
                 ],
               ),
             );

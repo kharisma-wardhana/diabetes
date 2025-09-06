@@ -51,7 +51,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             'adalah orang yang telah didiagnosa medis mengalami penyakit Diabetes Melitus yang ditandai dengan kadar gula darah yang tidak terkontrol dengan baik (cenderung tinggi).',
         infoB:
             'adalah orang yang tidak sedang mengidap penyakit Diabetes Melitus.',
-        image: Assets.images.elanIcon.path,
+        image: Assets.images.logoElan.path,
         onTapA: () {
           _pageController.animateToPage(
             2,
@@ -72,7 +72,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             'adalah keadaan dimana tubuh tidak mampu memproduksi insulin karena ada kerusakan sel pankreas hingga mengakibatkan kadar gula dalam darah terlalu tinggi.',
         infoB:
             'adalah keadaan dimana pankreas tidak mampu menghasilkan insulin dengan jumlah yang memadai atau tubuh tidak mampu menggunakan insulin yang tersedia dengan benar sehingga mengakibatkan kadar gula dalam darah terlalu tinggi .',
-        image: Assets.images.elanIcon.path,
+        image: Assets.images.logoElan.path,
         onTapA: () {
           context.read<AuthBloc>().add(CompleteOnboardingEvent());
           sl<AppNavigator>().pushReplacementNamed(antropometriPage);

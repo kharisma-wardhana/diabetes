@@ -20,8 +20,8 @@ class HealthInfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24.sp),
-          SizedBox(width: 12.w),
+          Icon(icon, size: 30.sp, color: Colors.blueGrey),
+          SizedBox(width: 8.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

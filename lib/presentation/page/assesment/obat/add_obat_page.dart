@@ -23,15 +23,24 @@ class _AddObatPageState extends State<AddObatPage> {
   static final ObatCubit _medicineCubit = sl<ObatCubit>();
 
   bool isLoading = false;
-  static final TextEditingController dateController = TextEditingController();
-  static final TextEditingController nameController = TextEditingController();
-  static final TextEditingController typeController = TextEditingController();
-  static final TextEditingController durasiController = TextEditingController();
-  static final TextEditingController dosisHariController =
-      TextEditingController();
-  static final TextEditingController dosisTypeController =
-      TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController durasiController = TextEditingController();
+  final TextEditingController dosisHariController = TextEditingController();
+  final TextEditingController dosisTypeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    nameController.dispose();
+    typeController.dispose();
+    durasiController.dispose();
+    dosisHariController.dispose();
+    dosisTypeController.dispose();
+    super.dispose();
+  }
 
   Widget _buildChipType({required String type}) {
     int typeInt = 0;
@@ -40,29 +49,37 @@ class _AddObatPageState extends State<AddObatPage> {
     } else if (type == 'Sesudah Makan') {
       typeInt = 2;
     }
-    return InkWell(
-      child: Chip(
-        elevation: 1,
-        label: SizedBox(
-          width: double.infinity,
-          child: Text(
-            type,
-            style: TextStyle(
-              color: typeController.text == typeInt.toString()
-                  ? ColorName.white
-                  : ColorName.primary,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: InkWell(
+        child: Chip(
+          elevation: 1,
+          label: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: Center(
+              child: Text(
+                type.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: typeController.text == typeInt.toString()
+                      ? ColorName.white
+                      : ColorName.primary,
+                ),
+              ),
             ),
           ),
+          backgroundColor: typeController.text == typeInt.toString()
+              ? ColorName.primary
+              : ColorName.white,
         ),
-        backgroundColor: typeController.text == typeInt.toString()
-            ? ColorName.primary
-            : ColorName.white,
+        onTap: () {
+          setState(() {
+            typeController.text = typeInt.toString();
+          });
+        },
       ),
-      onTap: () {
-        setState(() {
-          typeController.text = typeInt.toString();
-        });
-      },
     );
   }
 

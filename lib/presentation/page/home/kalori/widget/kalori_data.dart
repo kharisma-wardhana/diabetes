@@ -9,6 +9,7 @@ import '../../../../../core/constant.dart';
 import '../../../../../core/injector/service_locator.dart';
 import '../../../../../domain/entity/assesment/kalori/kalori_entity.dart';
 import '../../../../bloc/kalori/kalori_bloc.dart';
+import '../../../../widget/custom_button.dart';
 import '../../activitas/widget/circle_chart.dart';
 import '../../activitas/widget/health_info_row.dart';
 
@@ -117,7 +118,17 @@ class _KaloriDataState extends State<KaloriData>
                     );
                   },
                 ),
-                24.verticalSpace,
+                32.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomButton(
+                    textButton: 'Input Makanan',
+                    onTap: () {
+                      sl<AppNavigator>().pushNamed(dietPage);
+                    },
+                  ),
+                ),
+                18.verticalSpace,
                 HealthInfoRow(
                   icon: Icons.food_bank_rounded,
                   label: "Target Kalori",

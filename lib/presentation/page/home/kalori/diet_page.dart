@@ -34,7 +34,7 @@ class _DietPageState extends State<DietPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text('Perencanaan Diet')),
+        appBar: AppBar(title: const Text('Input Makanan')),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -86,31 +86,29 @@ class _DietPageState extends State<DietPage> {
                   ],
                 ),
               ),
-              BlocBuilder<KaloriBloc, BaseState<KaloriEntity>>(
-                builder: (context, state) {
+              BlocListener<KaloriBloc, BaseState<KaloriEntity>>(
+                listener: (context, state) {
                   if (state.isSuccess) {
                     sl<AppNavigator>().pushNamedAndRemoveUntil(homePage);
                   }
-                  return CustomButton(
-                    textButton: "Lanjutkan",
-                    onTap: () {
-                      final now = DateTime.now().toIso8601String().split(
-                        'T',
-                      )[0];
-                      context.read<KaloriBloc>().add(
-                        KaloriAddNutrition(
-                          KaloriEntity(
-                            date: now,
-                            type: "0",
-                            name: "name",
-                            total: "0",
-                            targetKalori: 100,
-                          ),
-                        ),
-                      );
-                    },
-                  );
                 },
+                child: CustomButton(
+                  textButton: "Lanjutkan",
+                  onTap: () {
+                    final now = DateTime.now().toIso8601String().split('T')[0];
+                    context.read<KaloriBloc>().add(
+                      KaloriAddNutrition(
+                        KaloriEntity(
+                          date: now,
+                          type: "0",
+                          name: "name",
+                          total: "0",
+                          targetKalori: 100,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
