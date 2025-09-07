@@ -43,6 +43,7 @@ class NutritionRemoteDatasourceImpl implements NutritionRemoteDatasource {
         'tanggal': params.date,
         'type': type,
         'jumlah_kalori': params.total,
+        'target_kalori': params.targetKalori,
       });
       final responseData = response.data as Map<String, dynamic>;
       return (responseData['list'] as List)

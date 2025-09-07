@@ -33,7 +33,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     _onboardingCards = [
       OnboardingCard(
         image: Assets.images.logo.path,
-        title: 'Selamat Datang',
+        title: 'Selamat datang di DM-Care Apps',
         subtitle: '',
         onTap: () {
           _pageController.animateToPage(

@@ -53,7 +53,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                         CustomAssesmentButton(
                           title: 'Kadar Gula Darah',
                           data: [
-                            'Total: ${state.data!.gula?.total}',
+                            'Total: ${state.data!.gula?.total} mg/dL',
                             state.data!.gula?.type == 1
                                 ? 'Jenis: Puasa'
                                 : 'Jenis: Non Puasa',
@@ -77,7 +77,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek tekanan darah Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Tensi: ${state.data!.tensi?.sistole} / ${state.data!.tensi?.diastole}',
+                                  'Tensi: ${state.data!.tensi?.sistole}/${state.data!.tensi?.diastole} mmHg',
                                   'Tanggal: ${state.data!.tensi?.date}',
                                 ],
                           onTap: () async {
@@ -98,7 +98,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek HbA1c Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Total: ${state.data!.hb1ac?.total}',
+                                  'Total: ${state.data!.hb1ac?.total}%',
                                   'Tanggal: ${state.data!.hb1ac?.date}',
                                 ],
                           onTap: () async {
@@ -117,8 +117,8 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek konsumsi air Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Total: ${state.data!.water?.total}',
-                                  'Target: ${state.data!.water?.target}',
+                                  'Total: ${state.data!.water?.total} gelas',
+                                  'Target: ${state.data!.water?.target} gelas',
                                   'Tanggal: ${state.data!.water?.date}',
                                 ],
                           onTap: () async {
@@ -138,7 +138,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek asam urat Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Total: ${state.data!.asamUrat?.total}',
+                                  'Total: ${state.data!.asamUrat?.total} mg/dL',
                                   'Tanggal: ${state.data!.asamUrat?.date}',
                                 ],
                           onTap: () async {
@@ -159,7 +159,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek kadar kolesterol Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Total: ${state.data!.kolesterol?.total}',
+                                  'Total: ${state.data!.kolesterol?.total} mg/dL',
                                   'Jenis: ${state.data!.kolesterol?.type}',
                                   'Tanggal: ${state.data!.kolesterol?.date}',
                                 ],
@@ -181,7 +181,7 @@ class _AssesmentPageState extends State<AssesmentPage> {
                                   'Silakan cek kesehatan ginjal Anda terlebih dahulu.',
                                 ]
                               : [
-                                  'Total: ${state.data!.ginjal?.total}',
+                                  'Total: ${state.data!.ginjal?.total} mg/dL',
                                   state.data!.ginjal?.type == 1
                                       ? 'Jenis: Ureum'
                                       : 'Jenis: Kreatinin',

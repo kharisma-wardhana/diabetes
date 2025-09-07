@@ -93,12 +93,11 @@ class _KaloriDataState extends State<KaloriData>
                 ? state.data!.targetKalori ?? 0
                 : 0;
             final totalKalori = state.isSuccess
-                ? state.data!.total.split(' ')[0]
-                : "0";
-            final kekuranganKalori = targetKalori - int.parse(totalKalori);
+                ? int.tryParse(state.data!.total.split(' ')[0]) ?? 0
+                : 0;
+            final kekuranganKalori = targetKalori - totalKalori;
 
-            double targetPercent = (int.parse(totalKalori) / targetKalori)
-                .clamp(0.0, 1.0);
+            double targetPercent = (totalKalori / targetKalori).clamp(0.0, 1.0);
             _animation = Tween<double>(begin: 0, end: targetPercent).animate(
               CurvedAnimation(parent: _controller, curve: Curves.easeOut),
             );
@@ -110,7 +109,7 @@ class _KaloriDataState extends State<KaloriData>
                     return InkWell(
                       onTap: () => sl<AppNavigator>().pushNamed(kaloriPage),
                       child: CircleChart(
-                        currentValue: int.parse(totalKalori),
+                        currentValue: totalKalori,
                         progressValue: _animation.value,
                         title: 'Kebutuhan\nKalori',
                         unit: 'Kkal',

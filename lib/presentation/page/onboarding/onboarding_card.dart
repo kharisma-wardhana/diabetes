@@ -25,33 +25,41 @@ class OnboardingCard extends StatelessWidget {
         Expanded(
           child: ListView(
             children: [
+              80.verticalSpace,
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset(
-                  Assets.images.logoKemenkes.path,
+                  Assets.images.logoElan.path,
                   fit: BoxFit.contain,
                 ),
               ),
-              SizedBox(height: 50.h),
+              // SizedBox(height: 50.h),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: SizedBox(
+              //     height: 250.h,
+              //     child: Image.asset(
+              //       Assets.images.logo.path,
+              //       fit: BoxFit.contain,
+              //     ),
+              //   ),
+              // ),
+              50.verticalSpace,
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  height: 250.h,
+                  height: 300.h,
                   child: Image.asset(
                     Assets.images.logo.path,
                     fit: BoxFit.contain,
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 200.h,
-                  child: Image.asset(
-                    Assets.images.logoElan.path,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
             ],
           ),

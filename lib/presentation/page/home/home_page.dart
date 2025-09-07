@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   String _updateTitle(int currentPage) {
     switch (currentPage) {
       case 0:
-        return 'Info';
+        return 'Home';
       case 1:
         return 'Aktivitas';
       case 2:
@@ -57,17 +57,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(_updateTitle(_currentPage).toUpperCase()),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.account_circle, size: 50),
-              onPressed: () {
-                sl<AppNavigator>().pushNamed(profilePage);
-              },
-            ),
-          ],
-        ),
+        appBar: _currentPage == 0
+            ? null
+            : AppBar(
+                title: Text(_updateTitle(_currentPage).toUpperCase()),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.account_circle, size: 50),
+                    onPressed: () {
+                      sl<AppNavigator>().pushNamed(profilePage);
+                    },
+                  ),
+                ],
+              ),
         body: PageView(
           controller: _pageController,
           onPageChanged: _onItemTapped,
@@ -85,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           selectedItemColor: Colors.white,
           selectedLabelStyle: TextStyle(color: Colors.white),
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Info'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
               icon: Icon(Icons.run_circle),
               label: 'Aktivitas',

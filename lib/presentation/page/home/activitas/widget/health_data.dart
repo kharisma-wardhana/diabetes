@@ -46,7 +46,7 @@ class _HealthDataState extends State<HealthData>
       children: [
         20.verticalSpace,
         Text(
-          'SKRINING KESEHATAN',
+          'SKRINING AKTIVITAS',
           style: GoogleFonts.poppins(
             fontSize: 24.sp,
             fontWeight: FontWeight.bold,
@@ -87,8 +87,8 @@ class _HealthDataState extends State<HealthData>
             }
 
             final steps = state.isSuccess ? state.data!.steps : 0;
-            double targetPercent = (steps / (state.data!.stepGoal ?? 10000))
-                .clamp(0.0, 1.0);
+            final stepGoal = (state.data!.stepGoal ?? 5000);
+            double targetPercent = (steps / stepGoal).clamp(0.0, 1.0);
             _animation = Tween<double>(begin: 0, end: targetPercent).animate(
               CurvedAnimation(parent: _controller, curve: Curves.easeOut),
             );
@@ -96,7 +96,7 @@ class _HealthDataState extends State<HealthData>
             final bloodPressure = state.isSuccess
                 ? state.data!.bloodPressure
                 : "-";
-            final calories = state.data!.kaloriBurned;
+            final calories = (state.data!.kaloriBurned).toStringAsFixed(2);
 
             return Column(
               children: [
@@ -122,7 +122,7 @@ class _HealthDataState extends State<HealthData>
                 HealthInfoRow(
                   icon: Icons.directions_walk,
                   label: "Jumlah Langkah Hari ini",
-                  value: "$steps langkah",
+                  value: "$steps/$stepGoal langkah",
                 ),
                 HealthInfoRow(
                   icon: Icons.monitor_heart,

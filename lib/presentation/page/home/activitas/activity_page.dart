@@ -22,12 +22,12 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  TextEditingController activityController = TextEditingController(
-    text: 'Berjalan Kaki',
-  );
+  TextEditingController activityController = TextEditingController(text: '-');
   TextEditingController activityLainController = TextEditingController();
+  TextEditingController stepController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isActivityLainSelected = false;
+  bool isStepValid = false;
   bool isLoading = false;
 
   @override
@@ -36,12 +36,15 @@ class _ActivityPageState extends State<ActivityPage> {
     // Initialize any necessary state here
     isActivityLainSelected = false; // Default to false
     isLoading = false; // Default loading state
+    isStepValid = false;
   }
 
   @override
   void dispose() {
     activityController.dispose();
     activityLainController.dispose();
+    isStepValid = false;
+    isLoading = false;
     super.dispose();
   }
 
@@ -53,6 +56,7 @@ class _ActivityPageState extends State<ActivityPage> {
           activityName: isActivityLainSelected
               ? activityLainController.text
               : activityController.text,
+          planData: {'target_steps': stepController.text},
         ),
       );
     }
@@ -73,7 +77,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Aktivitas Harian',
+                      'Silahkan pilih aktivitas hari ini yang ingin anda lakukan',
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
@@ -83,10 +87,17 @@ class _ActivityPageState extends State<ActivityPage> {
                     CustomDropdown(
                       controller: activityController,
                       items: activityOptions,
-                      onChanged: (value) {
+                      onChanged: (String value) {
                         // Handle dropdown selection
                         setState(() {
                           isActivityLainSelected = value == 'Lainnya';
+                          isStepValid =
+                              value.toLowerCase().contains('jalan') ||
+                              value.toLowerCase().contains('jogging') ||
+                              value.toLowerCase().contains('lari');
+                          if (isStepValid) {
+                            stepController.text = '5000';
+                          }
                           if (!isActivityLainSelected) {
                             activityLainController.clear();
                           }
@@ -94,6 +105,16 @@ class _ActivityPageState extends State<ActivityPage> {
                       },
                     ),
                     16.verticalSpace,
+                    isStepValid
+                        ? CustomTextField(
+                            labelText: 'Target Langkah Harian',
+                            hintText: 'Masukkan Target Langkah Harian',
+                            validatorEmpty:
+                                'Target Langkah Harian tidak boleh kosong',
+                            keyboardType: TextInputType.number,
+                            controller: stepController,
+                          )
+                        : SizedBox.shrink(),
                     isActivityLainSelected
                         ? CustomTextField(
                             labelText: 'Aktivitas Harian',

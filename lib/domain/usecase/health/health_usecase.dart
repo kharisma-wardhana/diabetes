@@ -8,21 +8,19 @@ import '../../../core/usecase.dart';
 import '../../../presentation/bloc/assesment/antropometri_cubit.dart';
 import '../../entity/health/health_entity.dart';
 
-class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
+class HealthUseCase implements UseCase<HealthEntity, ActivityGoalsParams> {
   final Health health;
 
   const HealthUseCase({required this.health});
 
   @override
-  Future<Either<Failure, HealthEntity>> call(
-    List<HealthDataType> params,
-  ) async {
+  Future<Either<Failure, HealthEntity>> call(ActivityGoalsParams params) async {
     final now = DateTime.now();
-    final lastMonth = now.subtract(Duration(days: 30));
+    final yesterday = now.subtract(Duration(days: 1));
 
     List<HealthDataPoint> data = await health.getHealthDataFromTypes(
-      types: params,
-      startTime: lastMonth,
+      types: params.types,
+      startTime: yesterday,
       endTime: now,
     );
 
@@ -57,8 +55,22 @@ class HealthUseCase implements UseCase<HealthEntity, List<HealthDataType>> {
         bloodPressure: systolic != null && diastolic != null
             ? "$systolic/$diastolic"
             : "-",
+        bloodSugar: params.bloodSugar,
+        stepGoal: params.goals,
         kaloriBurned: steps.toInt() * ((weight ?? 0) * 0.0005),
       ),
     );
   }
+}
+
+class ActivityGoalsParams {
+  final List<HealthDataType> types;
+  final int bloodSugar;
+  final int goals;
+
+  const ActivityGoalsParams({
+    required this.types,
+    required this.bloodSugar,
+    required this.goals,
+  });
 }

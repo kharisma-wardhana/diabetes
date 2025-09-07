@@ -1,3 +1,4 @@
+import 'package:diabetes/presentation/bloc/activity/activity_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,13 +73,15 @@ class MyApp extends StatelessWidget {
           BlocProvider<GinjalCubit>(create: (_) => sl<GinjalCubit>()),
           BlocProvider<AsamUratCubit>(create: (_) => sl<AsamUratCubit>()),
           BlocProvider<TensiCubit>(create: (_) => sl<TensiCubit>()),
-          BlocProvider<ActivityBloc>(create: (_) => sl<ActivityBloc>()),
+          BlocProvider<ActivityBloc>(
+            create: (_) => sl<ActivityBloc>()..add(RequestAuthorization()),
+          ),
           BlocProvider<ObatCubit>(create: (_) => sl<ObatCubit>()),
           BlocProvider<KaloriBloc>(create: (_) => sl<KaloriBloc>()),
         ],
         child: GlobalAuthListener(
           child: MaterialApp(
-            title: 'Digital DM-Care',
+            title: 'DM-Care',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               appBarTheme: AppBarTheme(
@@ -116,32 +119,32 @@ class MyApp extends StatelessWidget {
                 isDense: false,
               ),
               textTheme: TextTheme(
-                bodyMedium: GoogleFonts.nunito().copyWith(
+                bodyMedium: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                 ),
-                bodyLarge: GoogleFonts.nunito().copyWith(
+                bodyLarge: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                 ),
-                bodySmall: GoogleFonts.nunito().copyWith(
+                bodySmall: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
                 ),
-                titleLarge: GoogleFonts.nunito().copyWith(
+                titleLarge: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                 ),
-                titleMedium: GoogleFonts.nunito().copyWith(
+                titleMedium: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                 ),
-                titleSmall: GoogleFonts.nunito().copyWith(
+                titleSmall: GoogleFonts.roboto().copyWith(
                   color: Colors.black,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,

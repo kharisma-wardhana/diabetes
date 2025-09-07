@@ -119,13 +119,10 @@ class _KaloriPageState extends State<KaloriPage> {
               listener: (context, state) {
                 if (state.isSuccess) {
                   // Navigate to the next page or show a success message
-                  final typeDiabetes = context
-                      .read<AuthBloc>()
-                      .state
-                      .data
-                      ?.typeDiabetes;
+                  final typeDiabetes =
+                      sl<AuthBloc>().state.data?.typeDiabetes ?? typeNormal;
                   final args = context.read<KaloriBloc>().getTujuanDietArg(
-                    typeDiabetes ?? typeNormal,
+                    typeDiabetes,
                     bmiController.text,
                   );
                   sl<AppNavigator>().pushNamed(tujuanDietPage, arguments: args);

@@ -124,6 +124,7 @@ final List<String> obatType = [
 ];
 
 final List<String> activityOptions = [
+  '-',
   'Berjalan Kaki',
   'Jogging',
   'Lari',
@@ -144,6 +145,7 @@ const int typeDM = 1;
 const int typePreDM = 2;
 
 final List<String> karboOptions = [
+  '-',
   'Nasi Merah 150 gr (1 mangkok kecil) (200 kkal)',
   'Nasi Putih 150 gr (1 mangkok kecil) (250 kkal)',
   'Nasi Gurih/Liwet 150 gr (1 mangkok kecil) (290 kkal)',
@@ -158,6 +160,7 @@ final List<String> karboOptions = [
 ];
 
 final List<String> proteinOptions = [
+  '-',
   'Telur rebus 1 butir (90 kkal)',
   'Ikan 1 potong 60 gr (120 kkal)',
   'Tempe 1 potong ukuran kecil (90 kkal)',
@@ -170,6 +173,7 @@ final List<String> proteinOptions = [
 ];
 
 final List<String> seratOptions = [
+  '-',
   'Sayur bayam 1 mangkuk (40 kkal)',
   'Daun singkong 100 gr (50 kkal)',
   'Daun pepaya 100 gr (50 kkal)',

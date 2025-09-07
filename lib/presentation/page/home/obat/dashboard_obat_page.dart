@@ -155,7 +155,7 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                   ),
                   16.verticalSpace,
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.r),
+                    padding: EdgeInsets.all(8.r),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -167,60 +167,53 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                           ),
                         ),
                         8.verticalSpace,
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: obatList.length > 1
-                                ? 300
-                                      .h // Limit height if more than 4 items
-                                : double.infinity,
-                          ),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: obatList.length > 4
-                                ? const AlwaysScrollableScrollPhysics()
-                                : const NeverScrollableScrollPhysics(),
-                            itemCount: obatList.length,
-                            itemBuilder: (context, index) {
-                              final obat = obatList[index];
-                              return Container(
-                                margin: EdgeInsets.only(bottom: 8.h),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: .1),
-                                      blurRadius: 4.r,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(16.r),
-                                  color: Colors.blueGrey[150],
+                        ...obatList.map((obat) {
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 8.h),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: .1),
+                                  blurRadius: 4.r,
+                                  offset: Offset(0, 2),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.w),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        obat.name,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                      4.verticalSpace,
-                                      Text(
-                                        obat.dosis,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14.sp,
-                                        ),
-                                      ),
-                                      8.verticalSpace,
-                                      _buttonHandler(obat),
-                                    ],
+                              ],
+                              borderRadius: BorderRadius.circular(16.r),
+                              color: Colors.blueGrey[150],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(12.w),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    obat.name,
+                                    style: GoogleFonts.poppins(fontSize: 16.sp),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                  4.verticalSpace,
+                                  Text(
+                                    obat.dosis,
+                                    style: GoogleFonts.poppins(fontSize: 14.sp),
+                                  ),
+                                  8.verticalSpace,
+                                  Text(
+                                    obat.status == 0
+                                        ? 'Belum diminum'
+                                        : 'Sudah diminum',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.sp,
+                                      color: obat.status == 0
+                                          ? Colors.red
+                                          : Colors.green,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  8.verticalSpace,
+                                  _buttonHandler(obat),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),

@@ -179,7 +179,7 @@ class KaloriBloc extends Bloc<KaloriEvent, BaseState<KaloriEntity>> {
     int age,
     double factorActivity,
   ) {
-    final typeDiabetes = sl<AuthBloc>().state.data?.typeDiabetes;
+    final typeDiabetes = sl<AuthBloc>().state.data?.typeDiabetes ?? typeNormal;
     double bmr;
     if (gender == 'laki-laki') {
       if (typeDiabetes == typeNormal) {
@@ -208,6 +208,9 @@ class KaloriBloc extends Bloc<KaloriEvent, BaseState<KaloriEntity>> {
       bmiStatus = match.group(1)!; // the content inside parentheses
     }
     if (typeDiabetes == typeDM) {
+      if (bmiStatus == normalWeight) {
+        return tujuanDiet['Normal']![bmiStatus]!;
+      }
       return tujuanDiet['DM']![bmiStatus]!;
     }
     return tujuanDiet['Normal']![bmiStatus]!;

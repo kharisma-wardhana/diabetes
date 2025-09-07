@@ -67,8 +67,8 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         // Logo dan form scrollable
         SizedBox(
-          width: 200.w,
-          child: Image.asset(Assets.images.elanIcon.path, fit: BoxFit.cover),
+          width: 300.w,
+          child: Image.asset(Assets.images.logoElan.path, fit: BoxFit.cover),
         ),
         32.verticalSpace,
         CustomTextField(
@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
           style: TextStyle(
             fontSize: 18.sp,
             color: Colors.black,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
@@ -159,8 +159,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Text(
             'Buat Akun'.toUpperCase(),
             style: TextStyle(
-              fontSize: 18.sp,
-              color: Colors.blue[700],
+              fontSize: 20.sp,
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
             ),
             textAlign: TextAlign.center,

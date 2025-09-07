@@ -5,7 +5,8 @@ part 'activity_event.freezed.dart';
 @freezed
 class ActivityEvent with _$ActivityEvent {
   // Basic data operations
-  const factory ActivityEvent.fetchData() = FetchActivityData;
+  const factory ActivityEvent.fetchData({int? bloodSugar, int? goals}) =
+      FetchActivityData;
   const factory ActivityEvent.refreshData() = RefreshActivityData;
   const factory ActivityEvent.loadCachedData() = LoadCachedData;
   const factory ActivityEvent.clearCache() = ClearCache;

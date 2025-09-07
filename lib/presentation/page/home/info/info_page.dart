@@ -12,6 +12,7 @@ import '../../../../domain/entity/assesment/assesment_entity.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../bloc/assesment/assesment_cubit.dart';
+import '../../../bloc/auth/auth_bloc.dart';
 import '../../../bloc/info/article_cubit.dart';
 import '../../../bloc/info/doctor_cubit.dart';
 import '../../../bloc/info/video_cubit.dart';
@@ -31,6 +32,7 @@ class _InfoPageState extends State<InfoPage> {
   final doctorCubit = sl<DoctorCubit>();
   final articleCubit = sl<ArticleCubit>();
   final videoCubit = sl<VideoCubit>();
+  final authBloc = sl<AuthBloc>();
   final navigatorHelper = sl<AppNavigator>();
 
   void _showErrorDialog(String message) {
@@ -59,6 +61,75 @@ class _InfoPageState extends State<InfoPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    Assets.images.logoElan.path,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                8.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      navigatorHelper.pushNamed(profilePage);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(16.r),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        image: DecorationImage(
+                          image: AssetImage(Assets.images.background.path),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: List.of([
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(
+                              0,
+                              3,
+                            ), // changes position of shadow
+                          ),
+                        ]),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            Assets.images.logo.path,
+                            height: 100.h,
+                            fit: BoxFit.contain,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Halo, ${authBloc.state.data?.name ?? 'Pengguna'}',
+                                style: GoogleFonts.notoSans(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp,
+                                  color: ColorName.primary,
+                                ),
+                              ),
+                              Text(
+                                'Jaga kesehatan ya',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 14.sp,
+                                  color: ColorName.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.verticalSpace,
                 InkWell(
                   onTap: () async {
                     await context.read<AssesmentCubit>().getAssesment();
@@ -69,9 +140,11 @@ class _InfoPageState extends State<InfoPage> {
                           return Padding(
                             padding: EdgeInsets.all(8.r),
                             child: Container(
+                              padding: EdgeInsets.all(8.r),
                               width: double.infinity,
-                              height: 80.h,
+                              height: 120.h,
                               decoration: BoxDecoration(
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
                                   color: ColorName.primary,
@@ -79,9 +152,7 @@ class _InfoPageState extends State<InfoPage> {
                                 ),
                                 boxShadow: List.of([
                                   BoxShadow(
-                                    color: Colors.white12.withValues(
-                                      alpha: 0.5,
-                                    ),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: const Offset(

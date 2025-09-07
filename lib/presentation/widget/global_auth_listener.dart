@@ -30,6 +30,13 @@ class GlobalAuthListener extends StatelessWidget {
           if (user.isOnboardingComplete != null && user.isOnboardingComplete!) {
             if (user.isAntropometriComplete != null &&
                 user.isAntropometriComplete!) {
+              // Don't auto-navigate if we're on specific assessment pages
+              // Let those pages handle their own navigation
+              if (currentRoute == gulaDarahPage ||
+                  currentRoute == recommendationPage) {
+                return; // Skip auto-navigation for gula darah page
+              }
+
               // Only navigate if not already on home page
               if (currentRoute != homePage) {
                 final now = DateTime.now().toIso8601String().split('T')[0];

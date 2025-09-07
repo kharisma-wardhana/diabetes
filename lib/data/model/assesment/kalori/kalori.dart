@@ -14,6 +14,7 @@ abstract class Kalori with _$Kalori {
     required int type,
     required String total,
     required List<ItemData> data,
+    @JsonKey(name: 'target_kalori') int? targetKalori,
   }) = _Kalori;
 
   factory Kalori.fromJson(Map<String, dynamic> json) => _$KaloriFromJson(json);
@@ -22,5 +23,6 @@ abstract class Kalori with _$Kalori {
     type: type.toString(),
     total: total,
     data: data.map((item) => item.toEntity()).toList(),
+    targetKalori: targetKalori,
   );
 }

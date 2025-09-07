@@ -64,8 +64,23 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
     ];
 
-    await authorizationUsecase.call(types);
-    final result = await healthUsecase.call(types);
+    final permissions = [
+      HealthDataAccess.READ,
+      HealthDataAccess.READ,
+      HealthDataAccess.READ,
+      HealthDataAccess.READ,
+    ];
+
+    await authorizationUsecase.call(
+      HealthParams(types: types, permissions: permissions),
+    );
+    final result = await healthUsecase.call(
+      ActivityGoalsParams(
+        types: types,
+        bloodSugar: event.bloodSugar ?? 0,
+        goals: event.goals ?? 5000,
+      ),
+    );
     result.fold(
       (failure) {
         failure is NotFoundFailure
@@ -177,6 +192,10 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     emit(const ActivityState.loading('Registering activity plan...'));
 
     try {
+      final goals =
+          event.planData != null && event.planData!.containsKey('target_steps')
+          ? int.tryParse(event.planData!['target_steps'].toString()) ?? 5000
+          : 5000;
       await addActivityUsecase.call(
         AddParams(
           data: ActivityEntity(
@@ -184,10 +203,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             date: DateTime.now().toIso8601String().split('T')[0],
             hour: 0,
             minute: 0,
+            stepGoal: goals,
           ),
         ),
       );
-      add(const FetchActivityData());
+      add(FetchActivityData(goals: goals));
     } catch (error) {
       emit(
         ActivityState.error(
