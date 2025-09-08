@@ -88,6 +88,9 @@ class _ObatPageState extends State<ObatPage> {
                                                   .updateStatusMedicine(
                                                     e.id!,
                                                     0,
+                                                    (e.count ?? 0) - 1 < 0
+                                                        ? 0
+                                                        : (e.count ?? 0) - 1,
                                                   );
                                             },
                                             icon: const Icon(
@@ -107,6 +110,7 @@ class _ObatPageState extends State<ObatPage> {
                                                   .updateStatusMedicine(
                                                     e.id!,
                                                     1,
+                                                    e.count ?? 0 + 1,
                                                   );
                                             },
                                             icon: const Icon(

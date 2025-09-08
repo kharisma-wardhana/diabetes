@@ -556,14 +556,15 @@ class AssesmentRepositoryImpl extends AssesmentRepository {
 
   @override
   Future<Either<Failure, List<ObatEntity>>> updateStatusMedicine(
-    UpdateParams<int> params,
+    UpdateParams<Map<String, int>> params,
   ) async {
     try {
       final userID = await getUserID();
       final data = await medicineRemoteDataSource.updateStatusMedicine(
         userID,
         params.dataId,
-        params.data,
+        params.data['status'] ?? 0,
+        params.data['count'] ?? 0,
       );
       return Right(data.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {

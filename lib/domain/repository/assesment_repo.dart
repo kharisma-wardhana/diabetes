@@ -110,7 +110,7 @@ abstract class AssesmentRepository {
   );
 
   Future<Either<Failure, List<ObatEntity>>> updateStatusMedicine(
-    UpdateParams<int> params,
+    UpdateParams<Map<String, int>> params,
   );
 
   Future<Either<Failure, List<KaloriEntity>>> getAllNutrition(

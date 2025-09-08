@@ -6,14 +6,14 @@ import '../../entity/assesment/obat_entity.dart';
 import '../../repository/assesment_repo.dart';
 
 class UpdateStatusMedicineUseCase
-    extends UseCase<List<ObatEntity>, UpdateParams<int>> {
+    extends UseCase<List<ObatEntity>, UpdateParams<Map<String, int>>> {
   final AssesmentRepository repository;
 
   const UpdateStatusMedicineUseCase({required this.repository});
 
   @override
   Future<Either<Failure, List<ObatEntity>>> call(
-    UpdateParams<int> params,
+    UpdateParams<Map<String, int>> params,
   ) async {
     return await repository.updateStatusMedicine(params);
   }

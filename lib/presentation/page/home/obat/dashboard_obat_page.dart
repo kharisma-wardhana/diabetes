@@ -52,33 +52,56 @@ class _DashboardObatPageState extends State<DashboardObatPage>
   }
 
   Widget _buttonHandler(ObatEntity obat) {
+    // Parse dosis to get the total required count
+    final dosisText = obat.dosis;
+    final dosisMatch = RegExp(r'(\d+)').firstMatch(dosisText);
+    final totalDosis = dosisMatch != null ? int.parse(dosisMatch.group(1)!) : 1;
+    final currentCount = obat.count ?? 0;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Row(
           children: [
             IconButton(
-              onPressed: () {
-                context.read<ObatCubit>().updateStatusMedicine(obat.id!, 0);
-              },
-              icon: const Icon(
-                Icons.close_rounded,
-                color: Colors.red,
+              onPressed: currentCount > 0
+                  ? () {
+                      // Use the new decrement method
+                      context.read<ObatCubit>().decrementDosage(obat);
+                    }
+                  : null,
+              icon: Icon(
+                Icons.remove_circle_outline,
+                color: currentCount > 0 ? Colors.red : Colors.grey,
                 size: 45,
               ),
             ),
             const Text('Lupa'),
           ],
         ),
+        Column(
+          children: [
+            Text(
+              '$currentCount/$totalDosis',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Text('Diminum', style: TextStyle(fontSize: 12)),
+          ],
+        ),
         Row(
           children: [
             IconButton(
-              onPressed: () {
-                context.read<ObatCubit>().updateStatusMedicine(obat.id!, 1);
-              },
-              icon: const Icon(
-                Icons.check_circle_outline_rounded,
-                color: ColorName.primary,
+              onPressed: currentCount < totalDosis
+                  ? () {
+                      // Use the new increment method
+                      context.read<ObatCubit>().incrementDosage(obat);
+                    }
+                  : null,
+              icon: Icon(
+                Icons.add_circle_outline,
+                color: currentCount < totalDosis
+                    ? ColorName.primary
+                    : Colors.grey,
                 size: 45,
               ),
             ),
@@ -118,9 +141,28 @@ class _DashboardObatPageState extends State<DashboardObatPage>
             );
           } else if (state.isSuccess) {
             final obatList = state.data!;
-            final obatTaken = obatList.where((e) => e.status == 1).length;
-            final obatGoal = obatList.length;
-            final targetPercent = (obatTaken / obatGoal).clamp(0.0, 1.0);
+
+            // Calculate progress based on dosage counts
+            int totalDosisRequired = 0;
+            int totalDosisTaken = 0;
+
+            for (final obat in obatList) {
+              // Parse dosis to get the total required count
+              final dosisText = obat.dosis;
+              final dosisMatch = RegExp(r'(\d+)').firstMatch(dosisText);
+              final requiredCount = dosisMatch != null
+                  ? int.parse(dosisMatch.group(1)!)
+                  : 1;
+              final takenCount = obat.count ?? 0;
+
+              totalDosisRequired += requiredCount;
+              totalDosisTaken += takenCount;
+            }
+
+            final targetPercent = totalDosisRequired > 0
+                ? (totalDosisTaken / totalDosisRequired).clamp(0.0, 1.0)
+                : 0.0;
+
             _animation = Tween<double>(begin: 0, end: targetPercent).animate(
               CurvedAnimation(parent: _controller, curve: Curves.easeOut),
             );
@@ -145,10 +187,10 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                           sl<AppNavigator>().pushNamed(addObatPage);
                         },
                         child: CircleChart(
-                          currentValue: obatTaken,
+                          currentValue: totalDosisTaken,
                           progressValue: _animation.value,
-                          title: 'Kebutuhan\nObat',
-                          unit: '',
+                          title: 'Dosis Obat\nHarian',
+                          unit: '$totalDosisTaken/$totalDosisRequired',
                         ),
                       );
                     },
@@ -168,6 +210,17 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                         ),
                         8.verticalSpace,
                         ...obatList.map((obat) {
+                          // Parse dosis to get the total required count
+                          final dosisText = obat.dosis;
+                          final dosisMatch = RegExp(
+                            r'(\d+)',
+                          ).firstMatch(dosisText);
+                          final totalDosis = dosisMatch != null
+                              ? int.parse(dosisMatch.group(1)!)
+                              : 1;
+                          final currentCount = obat.count ?? 0;
+                          final isCompleted = currentCount >= totalDosis;
+
                           return Container(
                             margin: EdgeInsets.only(bottom: 8.h),
                             decoration: BoxDecoration(
@@ -179,7 +232,9 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                                 ),
                               ],
                               borderRadius: BorderRadius.circular(16.r),
-                              color: Colors.blueGrey[150],
+                              color: isCompleted
+                                  ? Colors.green[100]
+                                  : Colors.blueGrey[150],
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(12.w),
@@ -189,22 +244,33 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                                     obat.name,
                                     style: GoogleFonts.poppins(fontSize: 16.sp),
                                   ),
-                                  4.verticalSpace,
-                                  Text(
-                                    obat.dosis,
-                                    style: GoogleFonts.poppins(fontSize: 14.sp),
-                                  ),
                                   8.verticalSpace,
                                   Text(
-                                    obat.status == 0
-                                        ? 'Belum diminum'
-                                        : 'Sudah diminum',
+                                    '$currentCount dari $totalDosis dosis',
                                     style: GoogleFonts.poppins(
                                       fontSize: 14.sp,
-                                      color: obat.status == 0
-                                          ? Colors.red
-                                          : Colors.green,
+                                      color: isCompleted
+                                          ? Colors.green
+                                          : currentCount > 0
+                                          ? Colors.orange
+                                          : Colors.red,
                                       fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  4.verticalSpace,
+                                  Text(
+                                    isCompleted
+                                        ? 'Sudah lengkap'
+                                        : currentCount > 0
+                                        ? 'Sedang berjalan'
+                                        : 'Belum diminum',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12.sp,
+                                      color: isCompleted
+                                          ? Colors.green
+                                          : currentCount > 0
+                                          ? Colors.orange
+                                          : Colors.red,
                                     ),
                                   ),
                                   8.verticalSpace,

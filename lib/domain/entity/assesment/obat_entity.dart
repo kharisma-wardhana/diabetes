@@ -9,6 +9,7 @@ class ObatEntity extends Equatable {
   final int type;
   final int? duration;
   final int? status;
+  final int? count;
 
   const ObatEntity({
     this.id,
@@ -19,6 +20,7 @@ class ObatEntity extends Equatable {
     required this.type,
     this.duration,
     this.status,
+    this.count,
   });
 
   @override
@@ -31,5 +33,6 @@ class ObatEntity extends Equatable {
     type,
     duration,
     status,
+    count,
   ];
 }

@@ -67,10 +67,17 @@ class ObatCubit extends Cubit<BaseState<List<ObatEntity>>> {
     );
   }
 
-  Future<void> updateStatusMedicine(int medicineId, int status) async {
+  Future<void> updateStatusMedicine(
+    int medicineId,
+    int status,
+    int count,
+  ) async {
     emit(BaseState.loading());
     final result = await updateStatusMedicineUseCase.call(
-      UpdateParams(dataId: medicineId, data: status),
+      UpdateParams(
+        dataId: medicineId,
+        data: {'status': status, 'count': count},
+      ),
     );
     return result.fold(
       (failure) =>
@@ -83,5 +90,46 @@ class ObatCubit extends Cubit<BaseState<List<ObatEntity>>> {
         emit(BaseState.success(data: data));
       },
     );
+  }
+
+  /// Update dosage count for a medicine
+  /// This method ensures the count doesn't exceed the total required dosage
+  Future<void> updateDosageCount(
+    int medicineId,
+    int newCount,
+    int maxDosage,
+  ) async {
+    // Clamp the new count to valid range
+    final clampedCount = newCount.clamp(0, maxDosage);
+    final status = clampedCount < maxDosage
+        ? 0
+        : 1; // 0: not completed, 1: completed
+    await updateStatusMedicine(medicineId, status, clampedCount);
+  }
+
+  /// Increment dosage count for a medicine
+  Future<void> incrementDosage(ObatEntity medicine) async {
+    final dosisText = medicine.dosis;
+    final dosisMatch = RegExp(r'(\d+)').firstMatch(dosisText);
+    final maxDosage = dosisMatch != null ? int.parse(dosisMatch.group(1)!) : 1;
+    final currentCount = medicine.count ?? 0;
+
+    if (currentCount < maxDosage) {
+      await updateDosageCount(medicine.id!, currentCount + 1, maxDosage);
+    }
+  }
+
+  /// Decrement dosage count for a medicine
+  Future<void> decrementDosage(ObatEntity medicine) async {
+    final currentCount = medicine.count ?? 0;
+
+    if (currentCount > 0) {
+      final dosisText = medicine.dosis;
+      final dosisMatch = RegExp(r'(\d+)').firstMatch(dosisText);
+      final maxDosage = dosisMatch != null
+          ? int.parse(dosisMatch.group(1)!)
+          : 1;
+      await updateDosageCount(medicine.id!, currentCount - 1, maxDosage);
+    }
   }
 }

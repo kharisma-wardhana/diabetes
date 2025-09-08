@@ -10,6 +10,7 @@ abstract class MedicineRemoteDatasource {
     int userId,
     int medicineId,
     int status,
+    int count,
   );
 }
 
@@ -57,11 +58,12 @@ class MedicineRemoteDatasourceImpl implements MedicineRemoteDatasource {
     int userId,
     int medicineId,
     int status,
+    int count,
   ) async {
     try {
       final response = await apiService.patchData(
         '/users/$userId/medicines/$medicineId',
-        {'status': status},
+        {'status': status, 'count': count},
       );
       final responseData = response.data as Map<String, dynamic>;
       return (responseData['list'] as List)

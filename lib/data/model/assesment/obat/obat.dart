@@ -17,6 +17,7 @@ abstract class Obat with _$Obat {
     required String dosis,
     required int type,
     int? status,
+    int? count,
   }) = _Obat;
 
   factory Obat.fromJson(Map<String, dynamic> json) => _$ObatFromJson(json);
@@ -29,5 +30,6 @@ abstract class Obat with _$Obat {
     dosis: dosis,
     type: type,
     status: status,
+    count: count,
   );
 }
