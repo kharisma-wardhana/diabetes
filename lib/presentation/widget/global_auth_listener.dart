@@ -30,11 +30,12 @@ class GlobalAuthListener extends StatelessWidget {
           if (user.isOnboardingComplete != null && user.isOnboardingComplete!) {
             if (user.isAntropometriComplete != null &&
                 user.isAntropometriComplete!) {
-              // Don't auto-navigate if we're on specific assessment pages
-              // Let those pages handle their own navigation
+              // Don't auto-navigate if we're on specific pages that handle their own navigation
               if (currentRoute == gulaDarahPage ||
-                  currentRoute == recommendationPage) {
-                return; // Skip auto-navigation for gula darah page
+                  currentRoute == recommendationPage ||
+                  currentRoute == activityPage ||
+                  currentRoute == questionPage) {
+                return; // Skip auto-navigation for these pages
               }
 
               // Only navigate if not already on home page

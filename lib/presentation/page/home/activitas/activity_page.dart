@@ -9,6 +9,7 @@ import '../../../../core/injector/service_locator.dart';
 import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
+import '../../../bloc/assesment/gula_cubit.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_dropdown.dart';
 import '../../../widget/custom_loading.dart';
@@ -48,16 +49,52 @@ class _ActivityPageState extends State<ActivityPage> {
     super.dispose();
   }
 
-  void _handleActivityInput() {
-    if (_formKey.currentState!.validate()) {
-      // Logic to handle activity input
-      context.read<ActivityBloc>().add(
-        RegisterActivityPlan(
-          activityName: isActivityLainSelected
-              ? activityLainController.text
-              : activityController.text,
-          planData: {'target_steps': stepController.text},
-        ),
+  void _handleActivityInput() async {
+    if (_formKey.currentState!.validate() && activityController.text != '-') {
+      try {
+        // Fetch latest blood sugar data first
+        final today = DateTime.now().toIso8601String().split('T')[0];
+        await context.read<GulaCubit>().getListGula(today);
+
+        if (!mounted) return;
+
+        // Get the latest blood sugar value
+        final bloodSugarValue = context
+            .read<GulaCubit>()
+            .getLatestBloodSugarValue();
+
+        // Logic to handle activity input with blood sugar value
+        context.read<ActivityBloc>().add(
+          RegisterActivityPlan(
+            activityName: isActivityLainSelected
+                ? activityLainController.text
+                : activityController.text,
+            planData: {'target_steps': stepController.text},
+            bloodSugar: bloodSugarValue,
+          ),
+        );
+      } catch (e) {
+        if (!mounted) return;
+
+        // If there's an error fetching blood sugar, proceed without it
+        context.read<ActivityBloc>().add(
+          RegisterActivityPlan(
+            activityName: isActivityLainSelected
+                ? activityLainController.text
+                : activityController.text,
+            planData: {'target_steps': stepController.text},
+          ),
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Harap pilih aktivitas dan lengkapi form yang diperlukan',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   }
@@ -90,6 +127,7 @@ class _ActivityPageState extends State<ActivityPage> {
                       onChanged: (String value) {
                         // Handle dropdown selection
                         setState(() {
+                          activityController.text = value;
                           isActivityLainSelected = value == 'Lainnya';
                           isStepValid =
                               value.toLowerCase().contains('jalan') ||

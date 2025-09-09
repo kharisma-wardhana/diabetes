@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/base_state.dart';
@@ -15,14 +16,49 @@ import '../../../../widget/custom_loading.dart';
 class DoctorPage extends StatelessWidget {
   const DoctorPage({super.key});
 
-  void _launch(String phone) async {
-    String url =
-        "https://api.whatsapp.com/send?phone=$phone=${Uri.parse("Halo, ")}";
+  void _launch(String phone, BuildContext context) async {
+    // Clean phone number (remove any non-digit characters except +)
+    String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
+
+    // Encode the message
+    String message = Uri.encodeComponent("Halo, saya ingin berkonsultasi");
+
+    String url;
     if (Platform.isAndroid) {
-      url = "https://wa.me/$phone/?text=${Uri.parse("Halo, ")}";
+      url = "https://wa.me/$cleanPhone?text=$message";
+    } else {
+      url = "https://api.whatsapp.com/send?phone=$cleanPhone&text=$message";
     }
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        // Fallback: try opening WhatsApp app directly
+        final fallbackUri = Uri.parse(
+          "whatsapp://send?phone=$cleanPhone&text=$message",
+        );
+        if (await canLaunchUrl(fallbackUri)) {
+          await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
+        } else {
+          Fluttertoast.showToast(
+            msg: 'WhatsApp tidak tersedia atau tidak terinstall',
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_SHORT,
+          );
+        }
+      }
+    } catch (e) {
+      // Show error message to user
+      debugPrint('Error launching WhatsApp: $e');
+      Fluttertoast.showToast(
+        msg: 'Gagal membuka WhatsApp. Pastikan WhatsApp terinstall.',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
+      );
     }
   }
 
@@ -136,7 +172,7 @@ class DoctorPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final doctor = state.data![index];
                             return InkWell(
-                              onTap: () => _launch(doctor.mobile),
+                              onTap: () => _launch(doctor.mobile, context),
                               borderRadius: BorderRadius.circular(8.r),
                               child: Container(
                                 padding: EdgeInsets.all(12.w),

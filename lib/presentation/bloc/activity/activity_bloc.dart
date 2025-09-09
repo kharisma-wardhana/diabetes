@@ -56,7 +56,6 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     Emitter<ActivityState> emit,
   ) async {
     emit(const ActivityState.loading('Fetching activity data...'));
-
     final types = [
       HealthDataType.STEPS,
       HealthDataType.HEART_RATE,
@@ -110,8 +109,10 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     Emitter<ActivityState> emit,
   ) async {
     emit(const ActivityState.loading('Refreshing activity data...'));
-    // Add refresh logic here
-    add(const ActivityEvent.fetchData());
+    // Pass the bloodSugar and goals parameters from the refresh event
+    add(
+      ActivityEvent.fetchData(bloodSugar: event.bloodSugar, goals: event.goals),
+    );
   }
 
   Future<void> _onLoadCachedData(
@@ -207,7 +208,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           ),
         ),
       );
-      add(FetchActivityData(goals: goals));
+      // Fetch data with blood sugar value if available in the event
+      add(FetchActivityData(goals: goals, bloodSugar: event.bloodSugar));
     } catch (error) {
       emit(
         ActivityState.error(
@@ -235,7 +237,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           ),
         ),
       );
-      add(const FetchActivityData());
+      add(FetchActivityData(bloodSugar: event.bloodSugar));
     } catch (error) {
       emit(
         ActivityState.error(

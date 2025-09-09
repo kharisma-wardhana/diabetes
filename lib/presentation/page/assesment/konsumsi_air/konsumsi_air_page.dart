@@ -33,6 +33,7 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
   bool isLoading = false;
   int currentTarget = 0;
   int totalMinum = 1;
+  late int recommendTarget = 0;
   final TextEditingController dateController = TextEditingController(
     text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
   );
@@ -40,18 +41,48 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
     text: '',
   );
   final TextEditingController totalController = TextEditingController(text: '');
+  String? antropometriJson = '';
 
   @override
   void initState() {
     super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await getRecommend();
+    // Initialize currentTarget with recommendTarget if it's 0
+    if (currentTarget == 0) {
+      setState(() {
+        currentTarget = recommendTarget;
+      });
+    }
   }
 
   Future<int> getRecommend() async {
-    int weight = await sl<FlutterSecureStorage>()
-        .read(key: antropometriKey)
-        .then((value) => jsonDecode(value ?? '{}')['weight'] ?? 0);
-    double recommend = (1500 + (20 * (weight - 20))) / 220;
-    return recommend.ceil();
+    try {
+      antropometriJson = await sl<FlutterSecureStorage>().read(
+        key: antropometriKey,
+      );
+      final weight = antropometriJson == null
+          ? 0
+          : jsonDecode(antropometriJson!)['weight'] as double;
+      double recommend = (1500 + (20 * (weight - 20))) / 220;
+
+      if (mounted) {
+        setState(() {
+          if (recommendTarget == 0) {
+            recommendTarget = recommend.ceil();
+          }
+        });
+      }
+
+      return recommend.ceil();
+    } catch (e) {
+      debugPrint('Error calculating recommendation: $e');
+      // Return a default value if there's an error
+      return 8; // Default 8 glasses
+    }
   }
 
   void _showModalBottomSheet(BuildContext context) {
@@ -70,23 +101,35 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
               child: Column(
                 children: [
                   const Text('Target Harian'),
+                  const SizedBox(height: 8),
+                  const Divider(),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.remove_circle_outline),
-                        onPressed: () {
-                          setModalState(() async {
-                            final recommendation = await getRecommend();
-                            if (currentTarget > recommendation) {
-                              currentTarget = currentTarget - 1;
-                            }
-                          });
-                        },
+                        icon: Icon(
+                          Icons.remove_circle_outline,
+                          size: 45,
+                          color: currentTarget > recommendTarget
+                              ? Colors.red
+                              : Colors.grey,
+                        ),
+                        onPressed: currentTarget > recommendTarget
+                            ? () {
+                                setModalState(() {
+                                  currentTarget = currentTarget - 1;
+                                });
+                              }
+                            : null,
                       ),
                       Text('$currentTarget Gelas'),
                       IconButton(
-                        icon: const Icon(Icons.add_circle_outline),
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          size: 45,
+                          color: Colors.green,
+                        ),
                         onPressed: () {
                           setModalState(() {
                             currentTarget = currentTarget + 1;
@@ -104,14 +147,32 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
                   CustomButton(
                     textButton: 'Simpan Target',
                     onTap: () async {
-                      setState(() => isLoading = true);
-                      await _waterCubit.addWater(
-                        dateController.text,
-                        currentTarget,
-                        0,
-                      );
+                      // Close modal first
                       _navigationHelper.pop();
-                      setState(() => isLoading = false);
+
+                      // Then start loading state on main widget
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      try {
+                        // Perform async work
+                        await _waterCubit.addWater(
+                          dateController.text,
+                          currentTarget,
+                          0,
+                        );
+                      } catch (e) {
+                        // Handle error if needed
+                        debugPrint('Error saving water target: $e');
+                      } finally {
+                        // Stop loading state
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
                     },
                   ),
                 ],
@@ -213,13 +274,29 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
                         textButton: 'Tambahkan',
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
-                            setState(() => isLoading = true);
-                            await _waterCubit.addWater(
-                              dateController.text,
-                              currentTarget,
-                              totalMinum,
-                            );
-                            setState(() => isLoading = false);
+                            // Start loading state
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            try {
+                              // Perform async work
+                              await _waterCubit.addWater(
+                                dateController.text,
+                                currentTarget,
+                                totalMinum,
+                              );
+                            } catch (e) {
+                              // Handle error if needed
+                              debugPrint('Error adding water: $e');
+                            } finally {
+                              // Stop loading state
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            }
                           }
                         },
                       ),
@@ -237,7 +314,7 @@ class _KonsumsiAirPageState extends State<KonsumsiAirPage> {
                                   Column(
                                     children: [
                                       Text('Rekomendasi'),
-                                      Text('${getRecommend()}'),
+                                      Text('$recommendTarget'),
                                       const Text('Gelas'),
                                     ],
                                   ),

@@ -5,6 +5,7 @@ const String tokenKey = 'auth_token';
 const String antropometriKey = 'antropometri_data';
 const String activityKey = 'activity_data';
 const String userIDKey = 'user_id';
+const String typeDiabetesKey = 'type_diabetes';
 
 // RouteName Config
 const String splashPage = '/';

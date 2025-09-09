@@ -66,25 +66,25 @@ class _KolesterolPageState extends State<KolesterolPage> {
                       var status = 'Baik';
                       if (e.value.type.contains('Total')) {
                         if (e.value.total > 200 && e.value.total <= 239) {
-                          status = 'Perbatasan';
+                          status = 'Waspada';
                         } else if (e.value.total >= 240) {
                           status = 'Bahaya';
                         }
                       } else if (e.value.type.contains('LDL')) {
                         if (e.value.total > 130 && e.value.total <= 159) {
-                          status = 'Perbatasan';
+                          status = 'Waspada';
                         } else if (e.value.total >= 160) {
                           status = 'Bahaya';
                         }
                       } else if (e.value.type.contains('HDL')) {
                         if (e.value.total >= 40 && e.value.total <= 59) {
-                          status = 'Perbatasan';
+                          status = 'Waspada';
                         } else if (e.value.total < 40) {
                           status = 'Bahaya';
                         }
                       } else if (e.value.type.contains('Trigliserida')) {
                         if (e.value.total >= 200 && e.value.total < 400) {
-                          status = 'Perbatasan';
+                          status = 'Waspada';
                         } else if (e.value.total >= 400) {
                           status = 'Bahaya';
                         }

@@ -220,6 +220,12 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                               : 1;
                           final currentCount = obat.count ?? 0;
                           final isCompleted = currentCount >= totalDosis;
+                          String typeObat = 'Sebelum Makan';
+                          if (obat.type == 1) {
+                            typeObat = 'Saat Makan';
+                          } else if (obat.type == 2) {
+                            typeObat = 'Sesudah Makan';
+                          }
 
                           return Container(
                             margin: EdgeInsets.only(bottom: 8.h),
@@ -242,6 +248,11 @@ class _DashboardObatPageState extends State<DashboardObatPage>
                                 children: [
                                   Text(
                                     obat.name,
+                                    style: GoogleFonts.poppins(fontSize: 16.sp),
+                                  ),
+                                  8.verticalSpace,
+                                  Text(
+                                    typeObat,
                                     style: GoogleFonts.poppins(fontSize: 16.sp),
                                   ),
                                   8.verticalSpace,

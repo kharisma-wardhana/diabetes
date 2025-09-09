@@ -90,4 +90,14 @@ class GulaCubit extends Cubit<BaseState<List<GulaDarahEntity>>> {
       );
     }
   }
+
+  // Helper method to get the latest blood sugar value from current state
+  int getLatestBloodSugarValue() {
+    if (state.isSuccess && state.data!.isNotEmpty) {
+      // Get the most recent blood sugar entry
+      final latestEntry = state.data!.last;
+      return int.tryParse(latestEntry.total) ?? 0;
+    }
+    return 0;
+  }
 }

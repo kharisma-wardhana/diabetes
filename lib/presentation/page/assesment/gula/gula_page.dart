@@ -69,6 +69,12 @@ class _GulaPageState extends State<GulaPage> {
                       ],
                     ),
                     ...state.data!.asMap().entries.map((e) {
+                      String gulaType = 'Sebelum Makan';
+                      if (e.value.type == 1) {
+                        gulaType = 'Sesudah Makan';
+                      } else if (e.value.type == 2) {
+                        gulaType = 'Puasa';
+                      }
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Material(
@@ -84,7 +90,7 @@ class _GulaPageState extends State<GulaPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Pukul ${e.value.time}'),
-                                    Text('${e.value.type}'),
+                                    Text(gulaType),
                                   ],
                                 ),
                                 const Spacer(),

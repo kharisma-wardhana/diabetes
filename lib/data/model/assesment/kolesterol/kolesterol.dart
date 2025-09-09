@@ -17,6 +17,19 @@ abstract class Kolesterol with _$Kolesterol {
   factory Kolesterol.fromJson(Map<String, dynamic> json) =>
       _$KolesterolFromJson(json);
 
-  KolesterolEntity toEntity() =>
-      KolesterolEntity(date: date, type: type, total: int.parse(total));
+  KolesterolEntity toEntity() {
+    String titleType = 'LDL';
+    if (type == '1') {
+      titleType = 'HDL';
+    } else if (type == '2') {
+      titleType = 'Trigliserida';
+    } else if (type == '3') {
+      titleType = 'Total';
+    }
+    return KolesterolEntity(
+      date: date,
+      type: titleType,
+      total: int.parse(total),
+    );
+  }
 }

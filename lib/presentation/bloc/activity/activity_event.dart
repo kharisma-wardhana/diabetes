@@ -7,7 +7,8 @@ class ActivityEvent with _$ActivityEvent {
   // Basic data operations
   const factory ActivityEvent.fetchData({int? bloodSugar, int? goals}) =
       FetchActivityData;
-  const factory ActivityEvent.refreshData() = RefreshActivityData;
+  const factory ActivityEvent.refreshData({int? bloodSugar, int? goals}) =
+      RefreshActivityData;
   const factory ActivityEvent.loadCachedData() = LoadCachedData;
   const factory ActivityEvent.clearCache() = ClearCache;
 
@@ -19,9 +20,11 @@ class ActivityEvent with _$ActivityEvent {
   const factory ActivityEvent.registerPlan({
     required String activityName,
     Map<String, dynamic>? planData,
+    int? bloodSugar,
   }) = RegisterActivityPlan;
   const factory ActivityEvent.updatePlan({
     required String activityName,
     Map<String, dynamic>? planData,
+    int? bloodSugar,
   }) = UpdateActivityPlan;
 }

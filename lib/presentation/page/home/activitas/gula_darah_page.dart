@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../core/app_navigator.dart';
 import '../../../../core/base_state.dart';
@@ -8,8 +10,6 @@ import '../../../../core/constant.dart';
 import '../../../../core/injector/service_locator.dart';
 import '../../../../domain/entity/assesment/gula_darah/gula_darah_entity.dart';
 import '../../../bloc/assesment/gula_cubit.dart';
-import '../../../bloc/auth/auth_bloc.dart';
-import '../../../bloc/auth/auth_event.dart';
 import '../../../widget/base_page.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_text_field.dart';
@@ -52,11 +52,11 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
     // Custom validation: at least one field must have a value
     if (gulaDarahPuasaController.text.isEmpty &&
         gulaDarahSewaktuController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Harap isi minimal salah satu nilai gula darah'),
-          backgroundColor: Colors.red,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Harap isi minimal salah satu nilai gula darah',
+        textColor: Colors.white,
+        backgroundColor: Colors.red,
+        gravity: ToastGravity.BOTTOM,
       );
       return;
     }
@@ -68,11 +68,11 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
 
     // Validate that the value is a valid number
     if (double.tryParse(value) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Nilai gula darah harus berupa angka yang valid'),
-          backgroundColor: Colors.red,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Nilai gula darah harus berupa angka yang valid',
+        textColor: Colors.white,
+        backgroundColor: Colors.red,
+        gravity: ToastGravity.BOTTOM,
       );
       return;
     }
@@ -99,19 +99,17 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
 
   void _updateTypeDiabetesAndNavigate() async {
     try {
-      print(
-        'Updating AuthBloc with typeDiabetes: ${isDiabetes ? typeDM : typeNormal}',
-      );
-
       // Update AuthBloc
-      context.read<AuthBloc>().add(
-        UpdateTypeDiabetesEvent(isDiabetes ? typeDM : typeNormal),
+      // context.read<AuthBloc>().add(
+      //   UpdateTypeDiabetesEvent(isDiabetes ? typeDM : typeNormal),
+      // );
+      await sl<FlutterSecureStorage>().write(
+        key: typeDiabetesKey,
+        value: isDiabetes ? typeDM.toString() : typeNormal.toString(),
       );
 
       // Add a small delay to ensure AuthBloc processes the event
       await Future.delayed(const Duration(milliseconds: 100));
-
-      print('Navigating to recommendation page...');
 
       // Navigate to recommendation page
       sl<AppNavigator>().pushNamed(
@@ -121,12 +119,11 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
             : recommendations['normal']!,
       );
     } catch (e) {
-      print('Error in _updateTypeDiabetesAndNavigate: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan: $e'),
-          backgroundColor: Colors.red,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Terjadi kesalahan: $e',
+        textColor: Colors.white,
+        backgroundColor: Colors.red,
+        gravity: ToastGravity.BOTTOM,
       );
     }
   }
@@ -176,23 +173,13 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
             16.verticalSpace,
             BlocListener<GulaCubit, BaseState<List<GulaDarahEntity>>>(
               listener: (context, state) {
-                print('GulaCubit listener triggered: ${state.runtimeType}');
-                print('GulaCubit isSuccess: ${state.isSuccess}');
-                print('GulaCubit isError: ${state.isError}');
-                print('GulaCubit isLoading: ${state.isLoading}');
-
                 if (mounted) {
                   setState(() => isLoading = state.isLoading);
                 }
                 if (state.isSuccess) {
-                  print(
-                    'GulaCubit success - updating AuthBloc with isDiabetes: $isDiabetes',
-                  );
-
                   // Update AuthBloc and navigate directly
                   _updateTypeDiabetesAndNavigate();
                 } else if (state.isError) {
-                  print('GulaCubit error: ${state.errorMessage}');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(

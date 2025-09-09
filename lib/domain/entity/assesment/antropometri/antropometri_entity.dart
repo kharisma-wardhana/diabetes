@@ -6,6 +6,7 @@ part 'antropometri_entity.g.dart';
 @freezed
 abstract class AntropometriEntity with _$AntropometriEntity {
   const factory AntropometriEntity({
+    int? id,
     required double height,
     required double weight,
     required double stomach,

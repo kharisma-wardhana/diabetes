@@ -9,6 +9,7 @@ import '../../../../core/injector/service_locator.dart';
 import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
+import '../../../bloc/assesment/gula_cubit.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_scrollable.dart';
 import 'widget/health_data.dart';
@@ -24,14 +25,60 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
   @override
   void initState() {
     super.initState();
-    // Trigger initial data fetch
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<ActivityBloc>().add(const FetchActivityData());
-    // });
+  }
+
+  Future<void> _loadBloodSugarAndTriggerActivity() async {
+    if (!mounted) return;
+
+    try {
+      // Fetch today's blood sugar data
+      final today = DateTime.now().toIso8601String().split('T')[0];
+      await context.read<GulaCubit>().getListGula(today);
+
+      if (!mounted) return;
+
+      // Get the latest blood sugar value
+      final bloodSugarValue = context
+          .read<GulaCubit>()
+          .getLatestBloodSugarValue();
+
+      // Trigger ActivityBloc with the blood sugar value
+      context.read<ActivityBloc>().add(
+        FetchActivityData(bloodSugar: bloodSugarValue),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      // If there's an error, trigger ActivityBloc with default value
+      context.read<ActivityBloc>().add(const FetchActivityData());
+    }
   }
 
   Future<void> _onRefresh() async {
-    context.read<ActivityBloc>().add(const RefreshActivityData());
+    if (!mounted) return;
+
+    try {
+      // Fetch latest blood sugar data first
+      final today = DateTime.now().toIso8601String().split('T')[0];
+      await context.read<GulaCubit>().getListGula(today);
+
+      if (!mounted) return;
+
+      // Get the latest blood sugar value
+      final bloodSugarValue = context
+          .read<GulaCubit>()
+          .getLatestBloodSugarValue();
+
+      // Trigger ActivityBloc refresh with the blood sugar value
+      context.read<ActivityBloc>().add(
+        RefreshActivityData(bloodSugar: bloodSugarValue),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      // If there's an error, trigger refresh with default value
+      context.read<ActivityBloc>().add(const RefreshActivityData());
+    }
 
     // Wait for the loading state to complete
     await Future.delayed(const Duration(milliseconds: 100));
@@ -180,9 +227,7 @@ class _DashboardActivityPageState extends State<DashboardActivityPage> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<ActivityBloc>().add(
-                          const FetchActivityData(),
-                        );
+                        _loadBloodSugarAndTriggerActivity();
                       },
                       child: const Text('Coba Lagi'),
                     ),

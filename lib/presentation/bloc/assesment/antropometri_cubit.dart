@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -106,7 +108,7 @@ class AntropometriCubit extends Cubit<BaseState<AntropometriEntity>> {
           // Save antropometri data in secure storage
           await secureStorage.write(
             key: antropometriKey,
-            value: data.toString(),
+            value: jsonEncode(data),
           );
           emit(BaseState.success(data: data));
         },
@@ -128,7 +130,7 @@ class AntropometriCubit extends Cubit<BaseState<AntropometriEntity>> {
           // Save antropometri data in secure storage
           await secureStorage.write(
             key: antropometriKey,
-            value: data.toString(),
+            value: jsonEncode(data),
           );
           if (data != null) {
             emit(BaseState.success(data: data));
