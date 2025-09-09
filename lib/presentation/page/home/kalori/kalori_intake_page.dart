@@ -12,7 +12,7 @@ class KaloriIntakePage extends StatelessWidget {
   const KaloriIntakePage({super.key, required this.data});
 
   void _handleSubmit() {
-    sl<AppNavigator>().pushNamedAndRemoveUntil(homePage);
+    sl<AppNavigator>().pushNamedAndRemoveUntil(homePage, arguments: 2);
   }
 
   @override

@@ -42,7 +42,7 @@ class GlobalAuthListener extends StatelessWidget {
               if (currentRoute != homePage) {
                 final now = DateTime.now().toIso8601String().split('T')[0];
                 context.read<ObatCubit>().getAllMedicine(now);
-                navigator.pushNamedAndRemoveUntil(homePage);
+                navigator.pushNamedAndRemoveUntil(homePage, arguments: 0);
               }
             } else {
               navigator.pushNamedAndRemoveUntil(antropometriPage);

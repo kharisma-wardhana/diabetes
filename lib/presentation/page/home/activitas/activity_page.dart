@@ -172,7 +172,10 @@ class _ActivityPageState extends State<ActivityPage> {
                           });
                         }
                         if (state.isSuccess) {
-                          sl<AppNavigator>().pushNamedAndRemoveUntil(homePage);
+                          sl<AppNavigator>().pushNamedAndRemoveUntil(
+                            homePage,
+                            arguments: 1,
+                          );
                         } else if (state.isError) {
                           Fluttertoast.showToast(
                             msg: state.errorMessage ?? 'Unknown Error',

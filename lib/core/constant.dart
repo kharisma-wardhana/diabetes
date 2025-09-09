@@ -121,7 +121,6 @@ final List<String> obatType = [
   'Tetes',
   'Olesan',
   'Sachet',
-  'Sachet',
 ];
 
 final List<String> activityOptions = [

@@ -9,7 +9,8 @@ import 'obat/dashboard_obat_page.dart';
 import 'info/info_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int currentPage;
+  const HomePage({super.key, required this.currentPage});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,12 +18,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final PageController _pageController;
-  int _currentPage = 0;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentPage);
+    _selectedIndex = widget.currentPage;
+    _pageController = PageController(initialPage: _selectedIndex);
   }
 
   @override
@@ -33,8 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) async {
     setState(() {
-      _currentPage = index;
-      _pageController.jumpToPage(_currentPage);
+      _selectedIndex = index;
+      _pageController.jumpToPage(_selectedIndex);
     });
   }
 
@@ -57,10 +59,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: _currentPage == 0
+        appBar: _selectedIndex == 0
             ? null
             : AppBar(
-                title: Text(_updateTitle(_currentPage).toUpperCase()),
+                title: Text(_updateTitle(_selectedIndex).toUpperCase()),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.account_circle, size: 50),
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          currentIndex: _currentPage,
+          currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           selectedItemColor: Colors.white,
           selectedLabelStyle: TextStyle(color: Colors.white),

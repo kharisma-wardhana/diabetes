@@ -167,7 +167,10 @@ class _DietPageState extends State<DietPage> {
                   });
                 }
                 if (state.isSuccess) {
-                  sl<AppNavigator>().pushNamedAndRemoveUntil(homePage);
+                  sl<AppNavigator>().pushNamedAndRemoveUntil(
+                    homePage,
+                    arguments: 2,
+                  );
                 }
               },
               child: CustomButton(

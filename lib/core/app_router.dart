@@ -96,7 +96,9 @@ class AppRoutes {
       case antropometriPage:
         return MaterialPageRoute(builder: (_) => const AntropometriPage());
       case homePage:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(
+          builder: (_) => HomePage(currentPage: argument as int),
+        );
       case profilePage:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
       case aboutPage:
