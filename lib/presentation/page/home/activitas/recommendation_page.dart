@@ -36,7 +36,7 @@ class RecommendationPage extends StatelessWidget {
           CustomButton(
             textButton: "Lanjutkan",
             onTap: () {
-              sl<AppNavigator>().pushNamed(activityPage);
+              sl<AppNavigator>().pushNamedAndRemoveUntil(activityPage);
             },
           ),
         ],

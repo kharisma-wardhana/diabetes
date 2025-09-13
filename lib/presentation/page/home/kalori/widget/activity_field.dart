@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class DropdownActivityField extends StatefulWidget {
   final TextEditingController activityController;
-  const DropdownActivityField({super.key, required this.activityController});
+  final ValueChanged<String> onChanged;
+  const DropdownActivityField({
+    super.key,
+    required this.activityController,
+    required this.onChanged,
+  });
 
   @override
   State<DropdownActivityField> createState() => _DropdownActivityFieldState();
@@ -41,6 +46,7 @@ class _DropdownActivityFieldState extends State<DropdownActivityField> {
         setState(() => widget.activityController.text = value ?? '');
         if (value != null) {
           _showDetailBottomSheet(context, value);
+          widget.onChanged(value);
         }
       },
     );

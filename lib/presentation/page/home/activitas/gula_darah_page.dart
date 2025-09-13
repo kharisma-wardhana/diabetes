@@ -89,9 +89,12 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
     });
 
     // Add gula data first, AuthBloc will be updated in the listener if successful
+    final timeNow = TimeOfDay.now();
+    final currentDate = DateTime.now().toIso8601String().split('T')[0];
+    final formattedTime = '${timeNow.hour}:${timeNow.minute.toString().padLeft(2, '0')}';
     context.read<GulaCubit>().addGula(
-      DateTime.now().toIso8601String().split('T')[0],
-      TimeOfDay.now().toString().split('(')[1].split(')')[0],
+      currentDate,
+      formattedTime,
       type,
       value,
     );
@@ -99,10 +102,6 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
 
   void _updateTypeDiabetesAndNavigate() async {
     try {
-      // Update AuthBloc
-      // context.read<AuthBloc>().add(
-      //   UpdateTypeDiabetesEvent(isDiabetes ? typeDM : typeNormal),
-      // );
       await sl<FlutterSecureStorage>().write(
         key: typeDiabetesKey,
         value: isDiabetes ? typeDM.toString() : typeNormal.toString(),
@@ -120,7 +119,7 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
       );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: 'Terjadi kesalahan: $e',
+        msg: 'Terjadi kesalahan: ${e.toString()}',
         textColor: Colors.white,
         backgroundColor: Colors.red,
         gravity: ToastGravity.BOTTOM,
@@ -163,7 +162,7 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
               builder: (context, state) {
                 if (state.isError) {
                   return Text(
-                    state.errorMessage ?? 'Unknown Error',
+                    state.errorMessage?.toString() ?? 'Unknown Error',
                     style: TextStyle(color: Colors.red, fontSize: 16.sp),
                   );
                 }
@@ -180,13 +179,12 @@ class _GulaDarahPageState extends State<GulaDarahPage> {
                   // Update AuthBloc and navigate directly
                   _updateTypeDiabetesAndNavigate();
                 } else if (state.isError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Gagal menyimpan data: ${state.errorMessage}',
-                      ),
-                      backgroundColor: Colors.red,
-                    ),
+                  Fluttertoast.showToast(
+                    msg: state.errorMessage?.toString() ?? "Unknown Error",
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    gravity: ToastGravity.BOTTOM,
+                    toastLength: Toast.LENGTH_SHORT,
                   );
                 }
               },

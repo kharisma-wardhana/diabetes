@@ -3,6 +3,7 @@ import 'package:diabetes/presentation/bloc/kalori/kalori_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../../core/app_navigator.dart';
 import '../../../../core/constant.dart';
@@ -32,10 +33,11 @@ class _KaloriPageState extends State<KaloriPage> {
   );
   bool isLoading = false;
 
-  void _updateCalculations() {
+  void _updateCalculations() async {
     final user = context.read<AuthBloc>().state.data;
     final height = double.tryParse(heightController.text) ?? 0;
     final weight = double.tryParse(weightController.text) ?? 0;
+    final activity = activityController.text;
     final gender = user!.gender;
 
     if (height > 0 && weight > 0) {
@@ -43,18 +45,47 @@ class _KaloriPageState extends State<KaloriPage> {
         height,
         weight,
       );
-
-      kaloriController.text = context.read<KaloriBloc>().calculateKalori(
+      final factorActivity = _getFactorActivity(activity);
+      kaloriController.text = await context.read<KaloriBloc>().calculateKalori(
         gender,
         height,
         weight,
         user.age!,
-        double.tryParse(activityController.text) ?? 1.2,
+        factorActivity,
       );
     } else {
       bmiController.text = '';
       kaloriController.text = '';
     }
+  }
+
+  void _updateKalori(String activity) async {
+    final user = context.read<AuthBloc>().state.data;
+    final height = double.tryParse(heightController.text) ?? 0;
+    final weight = double.tryParse(weightController.text) ?? 0;
+    final gender = user!.gender;
+
+    if (height == 0 || weight == 0) return;
+    final factorActivity = _getFactorActivity(activity);
+    kaloriController.text = await context.read<KaloriBloc>().calculateKalori(
+      gender,
+      height,
+      weight,
+      user.age!,
+      factorActivity,
+    );
+  }
+
+  double _getFactorActivity(String activity) {
+    double factorActivity = 1.2;
+    if (activity == "Aktivitas ringan") {
+      factorActivity = 1.375;
+    } else if (activity == "Aktivitas sedang") {
+      factorActivity = 1.55;
+    } else if (activity == "Aktivitas berat") {
+      factorActivity = 1.725;
+    }
+    return factorActivity;
   }
 
   void _handleSubmit() {
@@ -107,7 +138,12 @@ class _KaloriPageState extends State<KaloriPage> {
               isReadOnly: true,
             ),
             8.verticalSpace,
-            DropdownActivityField(activityController: activityController),
+            DropdownActivityField(
+              activityController: activityController,
+              onChanged: (value) {
+                _updateKalori(value);
+              },
+            ),
             8.verticalSpace,
             CustomTextField(
               controller: kaloriController,
@@ -116,12 +152,16 @@ class _KaloriPageState extends State<KaloriPage> {
             ),
             16.verticalSpace,
             BlocListener<KaloriBloc, BaseState<KaloriEntity>>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if (state.isSuccess) {
                   // Navigate to the next page or show a success message
-                  final typeDiabetes =
-                      sl<AuthBloc>().state.data?.typeDiabetes ?? typeNormal;
-                  final args = context.read<KaloriBloc>().getTujuanDietArg(
+                  final typeDiabetesString =
+                      await sl<FlutterSecureStorage>().read(
+                        key: typeDiabetesKey,
+                      ) ??
+                      typeNormal.toString();
+                  final typeDiabetes = int.parse(typeDiabetesString);
+                  final args = sl<KaloriBloc>().getTujuanDietArg(
                     typeDiabetes,
                     bmiController.text,
                   );

@@ -10,9 +10,9 @@ import '../../../bloc/activity/activity_bloc.dart';
 import '../../../bloc/activity/activity_event.dart';
 import '../../../bloc/activity/activity_state.dart';
 import '../../../bloc/assesment/gula_cubit.dart';
+import '../../../widget/base_page.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_dropdown.dart';
-import '../../../widget/custom_loading.dart';
 import '../../../widget/custom_text_field.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -50,7 +50,9 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   void _handleActivityInput() async {
-    if (_formKey.currentState!.validate() && activityController.text != '-') {
+    if (_formKey.currentState!.validate() &&
+        activityController.text.isNotEmpty &&
+        activityController.text != '-') {
       try {
         // Fetch latest blood sugar data first
         final today = DateTime.now().toIso8601String().split('T')[0];
@@ -63,13 +65,30 @@ class _ActivityPageState extends State<ActivityPage> {
             .read<GulaCubit>()
             .getLatestBloodSugarValue();
 
+        // Validate step target if needed
+        String? stepTarget;
+        if (isStepValid && stepController.text.isNotEmpty) {
+          final stepValue = int.tryParse(stepController.text);
+          if (stepValue == null || stepValue <= 0) {
+            Fluttertoast.showToast(
+              msg: 'Target langkah harus berupa angka positif',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
+            return;
+          }
+          stepTarget = stepController.text;
+        }
+
         // Logic to handle activity input with blood sugar value
         context.read<ActivityBloc>().add(
           RegisterActivityPlan(
             activityName: isActivityLainSelected
-                ? activityLainController.text
-                : activityController.text,
-            planData: {'target_steps': stepController.text},
+                ? activityLainController.text.trim()
+                : activityController.text.trim(),
+            planData: stepTarget != null ? {'target_steps': stepTarget} : null,
             bloodSugar: bloodSugarValue,
           ),
         );
@@ -77,12 +96,17 @@ class _ActivityPageState extends State<ActivityPage> {
         if (!mounted) return;
 
         // If there's an error fetching blood sugar, proceed without it
+        String? stepTarget;
+        if (isStepValid && stepController.text.isNotEmpty) {
+          stepTarget = stepController.text;
+        }
+
         context.read<ActivityBloc>().add(
           RegisterActivityPlan(
             activityName: isActivityLainSelected
-                ? activityLainController.text
-                : activityController.text,
-            planData: {'target_steps': stepController.text},
+                ? activityLainController.text.trim()
+                : activityController.text.trim(),
+            planData: stepTarget != null ? {'target_steps': stepTarget} : null,
           ),
         );
       }
@@ -101,104 +125,119 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BasePage(
       appBar: AppBar(title: const Text('Aktivitas')),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16.r),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Silahkan pilih aktivitas hari ini yang ingin anda lakukan',
-                      style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    16.verticalSpace,
-                    CustomDropdown(
-                      controller: activityController,
-                      items: activityOptions,
-                      onChanged: (String value) {
-                        // Handle dropdown selection
-                        setState(() {
-                          activityController.text = value;
-                          isActivityLainSelected = value == 'Lainnya';
-                          isStepValid =
-                              value.toLowerCase().contains('jalan') ||
-                              value.toLowerCase().contains('jogging') ||
-                              value.toLowerCase().contains('lari');
-                          if (isStepValid) {
-                            stepController.text = '5000';
-                          }
-                          if (!isActivityLainSelected) {
-                            activityLainController.clear();
-                          }
-                        });
-                      },
-                    ),
-                    16.verticalSpace,
-                    isStepValid
-                        ? CustomTextField(
-                            labelText: 'Target Langkah Harian',
-                            hintText: 'Masukkan Target Langkah Harian',
-                            validatorEmpty:
-                                'Target Langkah Harian tidak boleh kosong',
-                            keyboardType: TextInputType.number,
-                            controller: stepController,
-                          )
-                        : SizedBox.shrink(),
-                    isActivityLainSelected
-                        ? CustomTextField(
-                            labelText: 'Aktivitas Harian',
-                            hintText: 'Masukkan Aktivitas Harian',
-                            validatorEmpty:
-                                'Aktivitas Harian tidak boleh kosong',
-                            keyboardType: TextInputType.text,
-                            controller: activityLainController,
-                          )
-                        : SizedBox.shrink(),
-                    Spacer(),
-                    BlocListener<ActivityBloc, ActivityState>(
-                      listener: (context, state) {
-                        if (mounted) {
-                          setState(() {
-                            isLoading = state.isLoading;
-                          });
-                        }
-                        if (state.isSuccess) {
-                          sl<AppNavigator>().pushNamedAndRemoveUntil(
-                            homePage,
-                            arguments: 1,
-                          );
-                        } else if (state.isError) {
-                          Fluttertoast.showToast(
-                            msg: state.errorMessage ?? 'Unknown Error',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
-                        }
-                      },
-                      child: CustomButton(
-                        textButton: "Lanjutkan",
-                        onTap: _handleActivityInput,
-                      ),
-                    ),
-                  ],
-                ),
+      isLoading: isLoading,
+      body: Padding(
+        padding: EdgeInsets.all(16.r),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Silahkan pilih aktivitas hari ini yang ingin anda lakukan',
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
-            ),
-            if (isLoading) Positioned.fill(child: const CustomLoading()),
-          ],
+              16.verticalSpace,
+              CustomDropdown(
+                controller: activityController,
+                items: activityOptions,
+                onChanged: (String value) {
+                  // Handle dropdown selection
+                  setState(() {
+                    activityController.text = value;
+                    isActivityLainSelected = value == 'Lainnya';
+                    isStepValid =
+                        value.toLowerCase().contains('jalan') ||
+                        value.toLowerCase().contains('jogging') ||
+                        value.toLowerCase().contains('lari');
+                    if (isStepValid) {
+                      stepController.text = '5000';
+                    } else {
+                      stepController.clear();
+                    }
+                    if (!isActivityLainSelected) {
+                      activityLainController.clear();
+                    }
+                  });
+                },
+              ),
+              16.verticalSpace,
+              isStepValid
+                  ? CustomTextField(
+                      labelText: 'Target Langkah Harian',
+                      hintText: 'Masukkan Target Langkah Harian',
+                      validatorEmpty:
+                          'Target Langkah Harian tidak boleh kosong',
+                      keyboardType: TextInputType.number,
+                      controller: stepController,
+                    )
+                  : SizedBox.shrink(),
+              isActivityLainSelected
+                  ? CustomTextField(
+                      labelText: 'Aktivitas Harian',
+                      hintText: 'Masukkan Aktivitas Harian',
+                      validatorEmpty: 'Aktivitas Harian tidak boleh kosong',
+                      keyboardType: TextInputType.text,
+                      controller: activityLainController,
+                    )
+                  : SizedBox.shrink(),
+              Spacer(),
+              BlocListener<ActivityBloc, ActivityState>(
+                listener: (context, state) {
+                  if (mounted) {
+                    setState(() {
+                      isLoading = state.isLoading;
+                    });
+                  }
+                  if (state.isSuccess) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Fluttertoast.showToast(
+                        msg: 'Aktivitas berhasil disimpan',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                      sl<AppNavigator>().pushNamedAndRemoveUntil(
+                        homePage,
+                        arguments: 1,
+                      );
+                    });
+                  } else if (state.isError) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Fluttertoast.showToast(
+                        msg: state.errorMessage ?? 'Terjadi kesalahan',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    });
+                  }
+                },
+                child: const SizedBox.shrink(),
+              ),
+              CustomButton(
+                textButton: "Lanjutkan",
+                onTap: _handleActivityInput,
+                isLoading: isLoading,
+              ),
+            ],
+          ),
         ),
       ),
     );

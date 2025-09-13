@@ -42,122 +42,153 @@ import '../presentation/page/splash_page.dart';
 import 'constant.dart';
 
 class AppRoutes {
-  static MaterialPageRoute onGenerateRoutes(dynamic argument, String? name) {
+  static Route onGenerateRoutes(dynamic argument, String? name) {
+    late Widget page;
+
     switch (name) {
       case splashPage:
-        return MaterialPageRoute(builder: (_) => const SplashPage());
+        page = const SplashPage();
+        break;
       case onboardingPage:
-        return MaterialPageRoute(builder: (_) => const OnboardingPage());
+        page = const OnboardingPage();
+        break;
       case loginPage:
-        return MaterialPageRoute(builder: (_) => const LoginPage());
+        page = const LoginPage();
+        break;
       case registerPage:
-        return MaterialPageRoute(builder: (_) => const RegisterPage());
+        page = const RegisterPage();
+        break;
+
       // Activity Pages
       case questionPage:
-        return MaterialPageRoute(builder: (_) => const QuestionPage());
+        page = const QuestionPage();
+        break;
       case gulaDarahPage:
-        return MaterialPageRoute(builder: (_) => const GulaDarahPage());
+        page = const GulaDarahPage();
+        break;
       case recommendationPage:
-        return MaterialPageRoute(
-          builder: (context) {
-            final args = argument ?? <String>[];
-            return RecommendationPage(data: args);
-          },
-        );
+        page = RecommendationPage(data: argument ?? <String>[]);
+        break;
       case activityPage:
-        return MaterialPageRoute(builder: (_) => const ActivityPage());
-      //============================================================
+        page = const ActivityPage();
+        break;
+
       // Kalori Pages
       case kaloriPage:
-        return MaterialPageRoute(builder: (_) => const KaloriPage());
+        page = const KaloriPage();
+        break;
       case tujuanDietPage:
-        return MaterialPageRoute(
-          builder: (context) {
-            final args = argument ?? <String>[];
-            return TujuanDietPage(data: args);
-          },
-        );
+        page = TujuanDietPage(data: argument ?? <String>[]);
+        break;
       case kaloriIntakePage:
-        return MaterialPageRoute(
-          builder: (context) {
-            final args = argument ?? <String>[];
-            return KaloriIntakePage(data: args);
-          },
-        );
+        page = KaloriIntakePage(data: argument ?? <String>[]);
+        break;
       case dietPage:
-        return MaterialPageRoute(builder: (_) => const DietPage());
-      //============================================================
+        page = const DietPage();
+        break;
+
       // Obat Pages
       case obatPage:
-        return MaterialPageRoute(builder: (_) => const ObatPage());
+        page = const ObatPage();
+        break;
       case addObatPage:
-        return MaterialPageRoute(builder: (_) => const AddObatPage());
-      //============================================================
+        page = const AddObatPage();
+        break;
+
       case antropometriPage:
-        return MaterialPageRoute(builder: (_) => const AntropometriPage());
+        page = const AntropometriPage();
+        break;
+
       case homePage:
-        return MaterialPageRoute(
-          builder: (_) => HomePage(currentPage: argument as int),
-        );
+        page = HomePage(currentPage: argument ?? 0);
+        break;
+
       case profilePage:
-        return MaterialPageRoute(builder: (_) => const ProfilePage());
+        page = const ProfilePage();
+        break;
       case aboutPage:
-        return MaterialPageRoute(builder: (_) => const AboutPage());
-      // Info Pages
+        page = const AboutPage();
+        break;
+
       case articlePage:
-        return MaterialPageRoute(builder: (_) => const ArtikelPage());
+        page = const ArtikelPage();
+        break;
       case detailArticlePage:
-        return MaterialPageRoute(
-          builder: (_) => DetailArtikelPage(article: argument),
-        );
+        page = DetailArtikelPage(article: argument);
+        break;
+
       case videoPage:
-        return MaterialPageRoute(builder: (_) => const VideoPage());
+        page = const VideoPage();
+        break;
+
       case edukasiPage:
-        return MaterialPageRoute(builder: (_) => const EdukasiPage());
+        page = const EdukasiPage();
+        break;
       case edukasiDetailPage:
-        return MaterialPageRoute(
-          builder: (_) => DetailEdukasiPage(edukasi: argument),
-        );
+        page = DetailEdukasiPage(edukasi: argument);
+        break;
+
       case doctorPage:
-        return MaterialPageRoute(builder: (_) => const DoctorPage());
-      //============================================================
+        page = const DoctorPage();
+        break;
+
       // Assesment Pages
       case assesmentPage:
-        return MaterialPageRoute(builder: (_) => const AssesmentPage());
+        page = const AssesmentPage();
+        break;
       case waterPage:
-        return MaterialPageRoute(builder: (_) => const KonsumsiAirPage());
+        page = const KonsumsiAirPage();
+        break;
       case addWaterPage:
-        return MaterialPageRoute(builder: (_) => const AddKonsumsiAirPage());
+        page = const AddKonsumsiAirPage();
+        break;
       case ginjalPage:
-        return MaterialPageRoute(builder: (_) => const GinjalPage());
+        page = const GinjalPage();
+        break;
       case addGinjalPage:
-        return MaterialPageRoute(builder: (_) => const AddGinjalPage());
+        page = const AddGinjalPage();
+        break;
       case gulaPage:
-        return MaterialPageRoute(builder: (_) => const GulaPage());
+        page = const GulaPage();
+        break;
       case addGulaPage:
-        return MaterialPageRoute(builder: (_) => const AddGulaPage());
+        page = const AddGulaPage();
+        break;
       case kolesterolPage:
-        return MaterialPageRoute(builder: (_) => const KolesterolPage());
+        page = const KolesterolPage();
+        break;
       case addKolesterolPage:
-        return MaterialPageRoute(builder: (_) => const AddKolesterolPage());
+        page = const AddKolesterolPage();
+        break;
       case tensiPage:
-        return MaterialPageRoute(builder: (_) => const TensiPage());
+        page = const TensiPage();
+        break;
       case addTensiPage:
-        return MaterialPageRoute(builder: (_) => const AddTensiPage());
+        page = const AddTensiPage();
+        break;
       case asamUratPage:
-        return MaterialPageRoute(builder: (_) => const AsamUratPage());
+        page = const AsamUratPage();
+        break;
       case addAsamUratPage:
-        return MaterialPageRoute(builder: (_) => const AddAsamUratPage());
+        page = const AddAsamUratPage();
+        break;
       case hbPage:
-        return MaterialPageRoute(builder: (_) => const HbPage());
+        page = const HbPage();
+        break;
       case addHbPage:
-        return MaterialPageRoute(builder: (_) => const AddHbPage());
-      //============================================================
+        page = const AddHbPage();
+        break;
+
       default:
-        return MaterialPageRoute(
-          builder: (_) =>
-              const Scaffold(body: Center(child: Text('Page not found'))),
-        );
+        page = const Scaffold(body: Center(child: Text('Page not found')));
     }
+
+    return PageRouteBuilder(
+      settings: RouteSettings(name: name, arguments: argument),
+      pageBuilder: (_, _, _) => page,
+      transitionsBuilder: (_, animation, _, child) =>
+          FadeTransition(opacity: animation, child: child),
+      transitionDuration: const Duration(milliseconds: 300),
+    );
   }
 }

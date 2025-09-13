@@ -11,7 +11,6 @@ import '../../../core/injector/service_locator.dart';
 import '../../../domain/entity/assesment/kalori/kalori_entity.dart';
 import '../../../domain/usecase/nutrition/add_nutrition_usecase.dart';
 import '../../../domain/usecase/nutrition/get_list_nutrition_usecase.dart';
-import '../auth/auth_bloc.dart';
 import 'kalori_event.dart';
 
 class KaloriBloc extends Bloc<KaloriEvent, BaseState<KaloriEntity>> {
@@ -172,14 +171,17 @@ class KaloriBloc extends Bloc<KaloriEvent, BaseState<KaloriEntity>> {
     }
   }
 
-  String calculateKalori(
+  Future<String> calculateKalori(
     String gender,
     double height,
     double weight,
     int age,
     double factorActivity,
-  ) {
-    final typeDiabetes = sl<AuthBloc>().state.data?.typeDiabetes ?? typeNormal;
+  ) async {
+    final typeDiabetesString =
+        await sl<FlutterSecureStorage>().read(key: typeDiabetesKey) ??
+        typeNormal.toString();
+    final typeDiabetes = int.parse(typeDiabetesString);
     double bmr;
     if (gender == 'laki-laki') {
       if (typeDiabetes == typeNormal) {

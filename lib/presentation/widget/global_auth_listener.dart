@@ -19,7 +19,7 @@ class GlobalAuthListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, BaseState<UserEntity>>(
-      listener: (context, state) {
+      listener: (context, state) async {
         // Get current route to avoid unnecessary navigation
         final navigator = sl<AppNavigator>();
         final currentRoute = ModalRoute.of(context)?.settings.name;
@@ -30,18 +30,12 @@ class GlobalAuthListener extends StatelessWidget {
           if (user.isOnboardingComplete != null && user.isOnboardingComplete!) {
             if (user.isAntropometriComplete != null &&
                 user.isAntropometriComplete!) {
-              // Don't auto-navigate if we're on specific pages that handle their own navigation
-              if (currentRoute == gulaDarahPage ||
-                  currentRoute == recommendationPage ||
-                  currentRoute == activityPage ||
-                  currentRoute == questionPage) {
-                return; // Skip auto-navigation for these pages
-              }
-
               // Only navigate if not already on home page
               if (currentRoute != homePage) {
+                // Add a small delay to prevent race conditions with other navigation calls
+                await Future.delayed(const Duration(milliseconds: 100));
                 final now = DateTime.now().toIso8601String().split('T')[0];
-                context.read<ObatCubit>().getAllMedicine(now);
+                sl<ObatCubit>().getAllMedicine(now);
                 navigator.pushNamedAndRemoveUntil(homePage, arguments: 0);
               }
             } else {

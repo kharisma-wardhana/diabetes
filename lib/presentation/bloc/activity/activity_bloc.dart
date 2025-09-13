@@ -197,7 +197,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           event.planData != null && event.planData!.containsKey('target_steps')
           ? int.tryParse(event.planData!['target_steps'].toString()) ?? 5000
           : 5000;
-      await addActivityUsecase.call(
+
+      // First, try to add the activity plan
+      final addResult = await addActivityUsecase.call(
         AddParams(
           data: ActivityEntity(
             name: event.activityName,
@@ -208,13 +210,36 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           ),
         ),
       );
-      // Fetch data with blood sugar value if available in the event
-      add(FetchActivityData(goals: goals, bloodSugar: event.bloodSugar));
-    } catch (error) {
+
+      // Check if add activity failed
+      addResult.fold(
+        (failure) {
+          emit(
+            ActivityState.error(
+              message: 'Failed to register activity plan: ${failure.message}',
+              error: failure,
+            ),
+          );
+          return;
+        },
+        (success) {
+          // Activity plan registered successfully, now fetch data
+          // Use a small delay to ensure the activity is saved before fetching
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (!isClosed) {
+              add(
+                FetchActivityData(goals: goals, bloodSugar: event.bloodSugar),
+              );
+            }
+          });
+        },
+      );
+    } catch (error, stackTrace) {
       emit(
         ActivityState.error(
-          message: 'Failed to register activity plan',
+          message: 'Failed to register activity plan: ${error.toString()}',
           error: error,
+          stackTrace: stackTrace,
         ),
       );
     }
